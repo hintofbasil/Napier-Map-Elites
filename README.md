@@ -1,5 +1,4 @@
 # Flask Docker Boilerplate
-# Shadowmail
 
 ## Usage
 
