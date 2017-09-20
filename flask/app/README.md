@@ -2,6 +2,10 @@
 
 ## Test
 
+### Install requirements
+
+    pip install -r requirements.txt
+
 ### Environment variables
 
     export APP_SETTINGS=Testing
@@ -10,11 +14,19 @@
     export SECRET_KEY="change_me"
     export FLASK_APP=$(pwd)/main.py
 
+### Initialise database
+
+    flask initdb
+
 ### Run tests
 
     flask test
 
 ## Development
+
+### Install requirements
+
+    pip install -r requirements.txt
 
 ### Environment variables
 
@@ -34,6 +46,10 @@ The development static files can be generated using
 or can be generated with watch enabled using
 
     gulp
+
+### Initialise database
+
+    flask initdb
 
 ### Development server
 
