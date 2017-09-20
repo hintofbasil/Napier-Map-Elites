@@ -16,3 +16,6 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get update && ap
 # Install npm and run gulp build
 RUN cd /app && npm install && npm install -g gulp-cli && gulp prod && cp /app/images /app/static -r
 
+#Enable logging
+RUN echo "logto = /var/log/uwsgi/uwsgi.log" >> /etc/uwsgi/uwsgi.ini && mkdir -p /var/log/uwsgi
+
