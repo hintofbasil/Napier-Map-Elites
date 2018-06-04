@@ -42,9 +42,37 @@ function generate_sliders(container, data) {
   container.empty();
   data['keys'].forEach((key, i) => {
     var range = data['ranges'][i];
-    var element = sprintf(SLIDER_TEMPLATE, key, range[0], range[1]);
+    var element = $(sprintf(SLIDER_TEMPLATE, key, range[0], range[1]));
+    element.on('change', slider_changed);
     container.append(element);
   });
+}
+
+function slider_changed() {
+  var sliderContainer = $('#slider-container');
+  var values = [];
+  sliderContainer.children().toArray().forEach((sliderBox) => {
+    var value = sliderBox.children[1].value;
+    values.push(value);
+  });
+  console.log(values);
+  var key = values.join(':');
+  display_data(data['data'][key]);
+}
+
+function display_data(data) {
+  var container = $('#results-container');
+  container.empty();
+  if (!data) {
+    var output = "<h3>No results found</h3>";
+    container.append(output);
+  } else {
+    var output = "<h3>Results</h3>";
+    Object.entries(data).forEach(([key, value]) => {
+      output += sprintf("\n<p>%s: %f</p>", key, value);
+    });
+    container.append(output);
+  }
 }
 
 var data;
@@ -56,7 +84,8 @@ $(document).ready(() => {
       data = load_csv(reader.result);
       var sliderContainer = $('#slider-container');
       generate_sliders(sliderContainer, data);
-      console.log(data);
+      // Fake a slider moving to generate first set of results
+      slider_changed();
     };
     reader.readAsText(e.target.files[0]);
   });
