@@ -8,11 +8,17 @@
   border-radius: 20px;
   text: blue;
   text-align: center;
-  padding: 5em 2em 5em 2em;
   margin: 5% 20% 5% 20%;
   cursor: pointer;
 
   transition: border 0.8s;
+  transition: margin 1s;
+
+  .label-wrapper-inner {
+    transition: padding 0.8s;
+    transition-delay: 0.8s;
+    padding: 5em 2em 5em 2em;
+  }
 
   img {
     width: 5em;
@@ -35,4 +41,11 @@
 
 .file-chooser-hover {
   border: 5px dashed #45859A !important;
+}
+
+.file-dropper-chosen {
+  margin: 0 0 1em 0 !important;
+  .label-wrapper-inner {
+    padding: 0.8em !important;
+  }
 }

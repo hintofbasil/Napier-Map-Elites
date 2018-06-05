@@ -10,8 +10,11 @@ class FileUploader {
     var fileDragHover = (e) => {
       e.stopPropagation();
       e.preventDefault();
-      this.dropper.className = (e.type === 'dragover' ?
-        'file-chooser-hover' : '');
+      if (e.type === 'dragover') {
+        this.dropper.classList.add('file-chooser-hover')
+      } else {
+        this.dropper.classList.remove('file-chooser-hover')
+      }
     };
 
     var fileDragDrop = (e) => {
@@ -19,6 +22,7 @@ class FileUploader {
       e.preventDefault();
       var reader = new FileReader();
       reader.onload = () => {
+        this.file_chosen();
         this.onRead(reader.result);
       };
       reader.readAsText(e.dataTransfer.files[0]);
@@ -27,6 +31,7 @@ class FileUploader {
     var fileChooserChange = (e) => {
       var reader = new FileReader();
       reader.onload = () => {
+        this.file_chosen();
         this.onRead(reader.result);
       };
       reader.readAsText(e.target.files[0]);
@@ -37,6 +42,10 @@ class FileUploader {
     this.dropper.addEventListener('drop', fileDragDrop, false);
 
     this.chooser.addEventListener('change', fileChooserChange, false);
+  }
+
+  file_chosen() {
+    this.dropper.classList.add('file-dropper-chosen');
   }
 }
 
