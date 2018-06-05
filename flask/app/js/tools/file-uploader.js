@@ -11,7 +11,7 @@ class FileUploader {
       e.stopPropagation();
       e.preventDefault();
       this.dropper.className = (e.type === 'dragover' ?
-        'file-choser-hover' : '');
+        'file-chooser-hover' : '');
     };
 
     var fileDragDrop = (e) => {

@@ -12,6 +12,8 @@
   margin: 5% 20% 5% 20%;
   cursor: pointer;
 
+  transition: border 0.8s;
+
   img {
     width: 5em;
     height: auto;
@@ -29,4 +31,8 @@
     color: white;
     font-size: 1.3em;
   }
+}
+
+.file-chooser-hover {
+  border: 5px dashed #45859A !important;
 }
