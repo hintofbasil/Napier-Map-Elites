@@ -1,5 +1,7 @@
 var sprintf = require('sprintf-js').sprintf;
 
+var file_upload = require('./tools/file-drop.js');
+
 var SLIDER_TEMPLATE = `
 <div class="slider-box">
   <h3>%s</h3>
@@ -84,6 +86,19 @@ function display_data(data) {
 var data;
 
 $(document).ready(() => {
+  var dropper = document.getElementById('file-dropper');
+  file_upload.make_dropper(dropper, (file) => {
+    var reader = new FileReader();
+    reader.onload = () => {
+      data = load_csv(reader.result);
+      var sliderContainer = $('#slider-container');
+      generate_sliders(sliderContainer, data);
+      // Fake a slider moving to generate first set of results
+      slider_changed();
+    };
+    reader.readAsText(file);
+  });
+
   $('#file-chooser').on('change', (e) => {
     var reader = new FileReader();
     reader.onload = () => {
