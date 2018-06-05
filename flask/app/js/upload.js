@@ -14,6 +14,22 @@ var SLIDER_TEMPLATE = `
 </div>
 `;
 
+var RESULTS_TABLE_TEMPLATE = `
+<table>
+  <tr>
+    <th colspan="2">%s</th>
+  </tr>
+  %s
+</table>
+`;
+
+var RESULTS_TABLE_ROW_TEMPLATE = `
+<tr>
+  <td>%s</td>
+  <td>%f</td>
+</tr>
+`;
+
 function load_csv(text) {
   var output = {};
   text = text.split('\n').map((x) => x.split(','));
@@ -72,13 +88,14 @@ function display_data(data) {
   var container = $('#results-container');
   container.empty();
   if (!data) {
-    var output = "<h3>No results found</h3>";
+    var output = sprintf(RESULTS_TABLE_TEMPLATE, "No results found", "");
     container.append(output);
   } else {
-    var output = "<h3>Results</h3>";
+    var rows = "";
     Object.entries(data).forEach(([key, value]) => {
-      output += sprintf("\n<p>%s: %f</p>", key, value);
+      rows += sprintf(RESULTS_TABLE_ROW_TEMPLATE, key, value);
     });
+    var output = sprintf(RESULTS_TABLE_TEMPLATE, "Results", rows);
     container.append(output);
   }
 }
