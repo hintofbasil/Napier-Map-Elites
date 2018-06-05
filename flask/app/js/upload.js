@@ -1,6 +1,6 @@
 var sprintf = require('sprintf-js').sprintf;
 
-var file_upload = require('./tools/file-drop.js');
+var FileUploader = require('./tools/file-uploader.js');
 
 var SLIDER_TEMPLATE = `
 <div class="slider-box">
@@ -86,28 +86,13 @@ function display_data(data) {
 var data;
 
 $(document).ready(() => {
-  var dropper = document.getElementById('file-dropper');
-  file_upload.make_dropper(dropper, (file) => {
-    var reader = new FileReader();
-    reader.onload = () => {
-      data = load_csv(reader.result);
-      var sliderContainer = $('#slider-container');
-      generate_sliders(sliderContainer, data);
-      // Fake a slider moving to generate first set of results
-      slider_changed();
-    };
-    reader.readAsText(file);
-  });
-
-  $('#file-chooser').on('change', (e) => {
-    var reader = new FileReader();
-    reader.onload = () => {
-      data = load_csv(reader.result);
-      var sliderContainer = $('#slider-container');
-      generate_sliders(sliderContainer, data);
-      // Fake a slider moving to generate first set of results
-      slider_changed();
-    };
-    reader.readAsText(e.target.files[0]);
+  console.log(FileUploader);
+  new FileUploader('file-dropper', 'file-chooser', (text) => {
+    console.log('hello');
+    data = load_csv(text);
+    var sliderContainer = $('#slider-container');
+    generate_sliders(sliderContainer, data);
+    // Fake a slider moving to generate first set of results
+    slider_changed();
   });
 });
