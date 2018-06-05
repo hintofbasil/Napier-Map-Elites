@@ -1,0 +1,32 @@
+#file-chooser {
+  display: none;
+}
+
+#file-dropper {
+  background: white;
+  border: 5px lightblue dashed;
+  border-radius: 20px;
+  text: blue;
+  text-align: center;
+  padding: 5em 2em 5em 2em;
+  margin: 5% 20% 5% 20%;
+  cursor: pointer;
+
+  img {
+    width: 5em;
+    height: auto;
+  }
+
+  .file-dropper-text {
+    margin-bottom: 8px;
+  }
+
+  .file-button {
+    background: #45859A;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 15px;
+    color: white;
+    font-size: 1.3em;
+  }
+}

@@ -6,8 +6,15 @@ Upload
 
 {% block content %}
 <div class="row">
-	<div class="one-half column" >
+	<div class="whole column" >
 		<input type="file" id="file-chooser" />
+		<div class="label-wrapper">
+			<label for="file-chooser" id="file-dropper">
+				<img src="/static/img/download.svg" />
+				<div class="file-dropper-text">Select a file or drag here</div>
+				<span class="file-button">Select a file</span>
+			</label>
+		</div>
 	</div>
 </div>
 
