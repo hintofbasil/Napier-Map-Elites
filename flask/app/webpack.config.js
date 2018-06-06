@@ -12,7 +12,7 @@ var files = glob.sync('./js/*.js').reduce(function(result, item) {
 }, {});
 
 var files = glob.sync('./sass/*.scss').reduce(function(result, item) {
-  var name = path.basename(item);
+  var name = path.basename(item, path.extname(item));
   result['css/' + name] = item;
   return result;
 }, files);
