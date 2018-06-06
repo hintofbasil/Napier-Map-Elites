@@ -119,6 +119,7 @@ $(document).ready(() => {
     // Fake a slider moving to generate first set of results
     slider_changed();
     console.log(data);
+    document.getElementById('heatmaps').innerHTML = '';
     new Heatmap('heatmaps', data, data.keys, ['emissions', 'fixedCost'], (info) => {
       console.log(info);
     });
