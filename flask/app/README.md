@@ -41,11 +41,11 @@
 
 The development static files can be generated using
 
-    gulp dev
+    npm run dev
 
 or can be generated with watch enabled using
 
-    gulp
+    npm run watch
 
 ### Initialise database
 
