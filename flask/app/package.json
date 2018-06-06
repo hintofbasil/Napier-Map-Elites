@@ -3,19 +3,20 @@
   "version": "0.0.1",
   "description": "Boilerplate code for a flask app using docker containers",
   "main": "gulpfile.js",
-  "dependencies": {
-    "babelify": "^7.3.0",
-    "browserify": "^14.3.0",
-    "gulp": "^3.9.1",
-    "gulp-concat-css": "^2.3.0",
-    "gulp-sass": "^3.1.0",
-    "sprintf-js": "^1.1.1",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.3",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^3.0.2"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack",
+    "watch": "webpack --watch",
+    "prod": "webpack -p"
   },
   "author": "",
   "license": "ISC"
