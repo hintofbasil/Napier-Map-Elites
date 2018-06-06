@@ -1,6 +1,7 @@
 var sprintf = require('sprintf-js').sprintf;
 
 var FileUploader = require('./tools/file-uploader.js');
+var Heatmap = require('./heatmap/heatmap.js');
 
 var SLIDER_TEMPLATE = `
 <div class="slider-box">
@@ -38,17 +39,25 @@ function load_csv(text) {
   output['evals'] = parseInt(text[2][1]);
   output['keys'] = text[3].slice(2, 2 + output['dimensions']);
   // Min and max normalised values
-  output['ranges'] = Array.from(output['keys']).map(() => [0, 0]);
+  output['ranges'] = Array.from(output['keys']).map(() => [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]);
 
   output['data'] = {}
   var dataOffset = 2 + output['keys'].length;
   for (var line of text.slice(4)) {
+    // Skip any invalid lines
+    if (line.length <= 1) {
+      console.log('Skipping line: "' + line + '"');
+      continue;
+    }
     var node = {
-      'distance': parseFloat(line[1]),
+      'distance': [null, parseFloat(line[1])],
     }
     output['keys'].forEach((e, i) => {
-      node[e] = parseFloat(line[i + dataOffset]);
       var normalised = parseFloat(line[i + 2]);
+      node[e] = [
+        normalised,
+        parseFloat(line[i + dataOffset])
+      ];
       // Set min and max ranges
       if (normalised < output['ranges'][i][0]) {
         output['ranges'][i][0] = normalised;
@@ -93,7 +102,7 @@ function display_data(data) {
   } else {
     var rows = "";
     Object.entries(data).forEach(([key, value]) => {
-      rows += sprintf(RESULTS_TABLE_ROW_TEMPLATE, key, value);
+      rows += sprintf(RESULTS_TABLE_ROW_TEMPLATE, key, value[1]);
     });
     var output = sprintf(RESULTS_TABLE_TEMPLATE, "Results", rows);
     container.append(output);
@@ -103,13 +112,15 @@ function display_data(data) {
 var data;
 
 $(document).ready(() => {
-  console.log(FileUploader);
   new FileUploader('file-dropper', 'file-chooser', (text) => {
-    console.log('hello');
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     generate_sliders(sliderContainer, data);
     // Fake a slider moving to generate first set of results
     slider_changed();
+    console.log(data);
+    new Heatmap('heatmaps', data, data.keys, ['emissions', 'fixedCost'], (info) => {
+      console.log(info);
+    });
   });
 });
