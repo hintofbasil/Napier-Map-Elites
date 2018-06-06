@@ -5,6 +5,10 @@
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
+    "css-loader": "^0.28.11",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.3",
     "webpack": "^4.10.2",
     "webpack-cli": "^3.0.2"
   },
