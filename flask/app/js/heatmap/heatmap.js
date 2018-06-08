@@ -1,6 +1,7 @@
 class Heatmap {
   constructor(elementId, data, keys, myKeys, callback) {
     this.container = document.getElementById(elementId);
+    this.toHighlight = [0, 0];
     this.data = data;
     this.keys = keys;
     this.myKeys = myKeys;
@@ -12,7 +13,7 @@ class Heatmap {
   add_label() {
     var label = document.createElement("div");
     label.className = "heatmap-label";
-    label.innerHTML = this.myKeys[0] + ":" + this.myKeys[1];
+    label.innerHTML = this.myKeys[1] + ":" + this.myKeys[0];
     this.base.appendChild(label);
   }
 
@@ -98,8 +99,28 @@ class Heatmap {
     return ids;
   }
 
-  slider_changed(key) {
-    console.log(key);
+  change_highlight(key, value) {
+    if (key == this.myKeys[0]) {
+      var offset = this.data.ranges[this.keys.indexOf(key)][0];
+      this.toHighlight[0] = value - offset;
+    }
+    if (key == this.myKeys[1]) {
+      var offset = this.data.ranges[this.keys.indexOf(key)][0];
+      var range = this.data.ranges[this.keys.indexOf(key)][1] -
+        this.data.ranges[this.keys.indexOf(key)][0]
+      this.toHighlight[1] = range - (value - offset);
+    }
+    var table = this.base.children[0]
+    for (var j=0; j<table.children.length; j++) {
+      var row = table.children[j];
+      for (var i=0; i<row.children.length; i++) {
+        var cell = row.children[i];
+        $(cell).removeClass('heat-map-selected');
+        if (i == this.toHighlight[0] && j == this.toHighlight[1]) {
+          $(cell).addClass('heat-map-selected');
+        }
+      }
+    }
   }
 }
 

@@ -73,18 +73,18 @@ function load_csv(text) {
   return output;
 };
 
-function generate_sliders(container, data) {
+function generate_sliders(container, data, heatMaps) {
   container.empty();
   data['keys'].forEach((key, i) => {
     var range = data['ranges'][i];
     var start = Math.floor((range[1]+range[0])/2);
     var element = $(sprintf(SLIDER_TEMPLATE, key, range[0], range[1], range[1], start, range[0]));
-    element.on('change', slider_changed);
+    element.on('change', () => { slider_changed(heatMaps) } );
     container.append(element);
   });
 }
 
-function slider_changed() {
+function slider_changed(heatMaps) {
   var sliderContainer = $('#slider-container');
   var values = [];
   sliderContainer.children().toArray().forEach((sliderBox) => {
@@ -94,6 +94,15 @@ function slider_changed() {
   });
   var key = values.join(':');
   display_data(data['data'][key]);
+
+  // Update heat maps
+  for (var i=0; i<values.length; i++) {
+    var k = data.keys[i];
+    var v = values[i];
+    for (var heatMap of heatMaps) {
+      heatMap.change_highlight(k, v);
+    }
+  }
 }
 
 function display_data(data) {
@@ -132,9 +141,9 @@ $(document).ready(() => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     console.log(data);
-    let heatMaps = generate_heat_maps(data);
-    generate_sliders(sliderContainer, data);
+    var heatMaps = generate_heat_maps(data);
+    generate_sliders(sliderContainer, data, heatMaps);
     // Fake a slider moving to generate first set of results
-    slider_changed();
+    slider_changed(heatMaps);
   });
 });
