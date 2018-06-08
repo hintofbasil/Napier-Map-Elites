@@ -1,10 +1,11 @@
 class Heatmap {
-  constructor(elementId, data, keys, myKeys, callback) {
+  constructor(elementId, data, myKeys, callback) {
     this.container = document.getElementById(elementId);
     this.toHighlight = [0, 0];
     this.data = data;
-    this.keys = keys;
+    this.keys = data.keys;
     this.myKeys = myKeys;
+    this.range = data.distanceRange;
     this.callback = callback;
     this.create_map();
     this.add_label();
@@ -30,7 +31,9 @@ class Heatmap {
       for (var j=0; j<=(dimensions[2] - dimensions[0]); j++) {
         var cell = document.createElement("td");
         var entries = values[i][j];
+        var style = entries.length > 0 ? "background:" + this.get_cell_color(entries) : ""
         cell.className = entries.length > 0 ? "heat-map-found" : "heat-map-not-found";
+        cell.style = style;
         cell.entries = entries;
         cell.addEventListener('click', (e) => {
           this.callback(e, e.target.entries);
@@ -121,6 +124,22 @@ class Heatmap {
         }
       }
     }
+  }
+
+  get_cell_color(entries) {
+    var shortest = entries.reduce((a, b) => {
+      return a.distance[1] < b.distance[1] ? a : b;
+    });
+    var r = this.range[1] - this.range[0];
+    var percent = (shortest.distance[1] - this.range[0]) / r;
+    return this.get_color(percent);
+  }
+
+  // Taken from https://stackoverflow.com/a/17268489
+  get_color(value){
+    //value from 0 to 1
+    var hue=((1-value)*120).toString(10);
+    return ["hsl(",hue,",100%,50%)"].join("");
   }
 }
 

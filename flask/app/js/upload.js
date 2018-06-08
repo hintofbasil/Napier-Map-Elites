@@ -46,6 +46,7 @@ function load_csv(text) {
 
   output['data'] = {}
   var dataOffset = 2 + output['keys'].length;
+  var distanceRange = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY];
   for (var line of text.slice(4)) {
     // Skip any invalid lines
     if (line.length <= 1) {
@@ -68,8 +69,11 @@ function load_csv(text) {
         output['ranges'][i][1] = normalised;
       }
     });
+    distanceRange[0] = Math.min(distanceRange[0], node['distance'][1]);
+    distanceRange[1] = Math.max(distanceRange[1], node['distance'][1]);
     output['data'][line[0]] = node;
   }
+  output['distanceRange'] = distanceRange;
   return output;
 };
 
@@ -126,7 +130,7 @@ function generate_heat_maps(data) {
   var pairs = combinations(data.keys, 2);
   var maps = [];
   for (var pair of pairs) {
-    var map = new Heatmap('heatmaps', data, data.keys, pair, (e, info) => {
+    var map = new Heatmap('heatmaps', data, pair, (e, info) => {
       console.log(info);
     });
     maps.push(map);
