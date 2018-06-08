@@ -120,7 +120,7 @@ $(document).ready(() => {
     slider_changed();
     console.log(data);
     document.getElementById('heatmaps').innerHTML = '';
-    new Heatmap('heatmaps', data, data.keys, ['emissions', 'fixedCost'], (info) => {
+    new Heatmap('heatmaps', data, data.keys, ['emissions', 'fixedCost'], (e, info) => {
       console.log(info);
     });
   });

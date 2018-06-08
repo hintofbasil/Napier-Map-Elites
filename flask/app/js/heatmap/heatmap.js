@@ -19,7 +19,12 @@ class Heatmap {
       var row = document.createElement("tr");
       for (var j=0; j<=(dimensions[2] - dimensions[0]); j++) {
         var cell = document.createElement("td");
-        cell.className = values[i][j] === true ? "heat-map-found" : "heat-map-not-found";
+        var entries = values[i][j];
+        cell.className = entries.length > 0 ? "heat-map-found" : "heat-map-not-found";
+        cell.entries = entries;
+        cell.addEventListener('click', (e) => {
+          this.callback(e, e.target.entries);
+        });
         row.appendChild(cell);
       }
       table.appendChild(row);
@@ -29,9 +34,11 @@ class Heatmap {
 
   get_map_values() {
     var dimensions = this.get_map_dimensions();
+    // Plus one to make it inclusive
     var values = this.create_matrix(
-      dimensions[2] - dimensions[0],
-      dimensions[3] - dimensions[1]
+      dimensions[3] - dimensions[1] + 1,
+      dimensions[2] - dimensions[0] + 1,
+      0
     );
     for (var key in this.data.data) {
       var entry = this.data.data[key];
@@ -42,7 +49,7 @@ class Heatmap {
       y = y - dimensions[1];
       // Invert y axis
       y = (dimensions[3] - dimensions[1]) - y;
-      values[y][x] = true;
+      values[y][x].push(entry);
     }
     return values;
   }
