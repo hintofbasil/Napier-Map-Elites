@@ -1,5 +1,8 @@
 var sprintf = require('sprintf-js').sprintf;
 
+require( 'babel-polyfill' ) ;
+var combinations = require('@aureooms/js-itertools/src/map/combinations.js').combinations;
+
 var FileUploader = require('./tools/file-uploader.js');
 var Heatmap = require('./heatmap/heatmap.js');
 
@@ -109,19 +112,29 @@ function display_data(data) {
   }
 }
 
+function generate_heat_maps(data) {
+  document.getElementById('heatmaps').innerHTML = '';
+  var pairs = combinations(data.keys, 2);
+  var maps = [];
+  for (var pair of pairs) {
+    var map = new Heatmap('heatmaps', data, data.keys, pair, (e, info) => {
+      console.log(info);
+    });
+    maps.push(map);
+  }
+  return maps;
+}
+
 var data;
 
 $(document).ready(() => {
   new FileUploader('file-dropper', 'file-chooser', (text) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
+    console.log(data);
+    let heatMaps = generate_heat_maps(data);
     generate_sliders(sliderContainer, data);
     // Fake a slider moving to generate first set of results
     slider_changed();
-    console.log(data);
-    document.getElementById('heatmaps').innerHTML = '';
-    new Heatmap('heatmaps', data, data.keys, ['emissions', 'fixedCost'], (e, info) => {
-      console.log(info);
-    });
   });
 });

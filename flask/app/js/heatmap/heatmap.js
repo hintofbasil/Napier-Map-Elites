@@ -87,6 +87,10 @@ class Heatmap {
     }
     return ids;
   }
+
+  slider_changed(key) {
+    console.log(key);
+  }
 }
 
 module.exports = Heatmap;
