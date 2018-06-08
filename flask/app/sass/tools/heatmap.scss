@@ -1,21 +1,29 @@
-.heatmap-table {
+.heatmap-container{
   float: left;
   margin: 10px;
-  width: 150px;
-  height: 150px;
-  tr {
-    padding: 0;
-    margin: 0;
-    td {
+
+  .heatmap-table {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 0;
+    tr {
       padding: 0;
-      border-bottom: 1px solid white;
-      border-right: 1px solid white;
+      margin: 0;
+      td {
+        padding: 0;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+      }
+      .heat-map-found {
+        background: darkgrey;
+      }
+      .heat-map-not-found {
+        background: lightgrey;
+      }
     }
-    .heat-map-found {
-      background: darkgrey;
-    }
-    .heat-map-not-found {
-      background: lightgrey;
-    }
+  }
+
+  .heatmap-label {
+    text-align: center;
   }
 }

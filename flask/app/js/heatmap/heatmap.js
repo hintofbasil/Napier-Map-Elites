@@ -6,10 +6,19 @@ class Heatmap {
     this.myKeys = myKeys;
     this.callback = callback;
     this.create_map();
+    this.add_label();
+  }
+
+  add_label() {
+    var label = document.createElement("div");
+    label.className = "heatmap-label";
+    label.innerHTML = this.myKeys[0] + ":" + this.myKeys[1];
+    this.base.appendChild(label);
   }
 
   create_map() {
     var base = document.createElement("div");
+    base.className = "heatmap-container";
     var table = document.createElement("table");
     table.className = "heatmap-table";
     base.appendChild(table);
@@ -30,6 +39,7 @@ class Heatmap {
       table.appendChild(row);
     }
     this.container.appendChild(base);
+    this.base = base;
   }
 
   get_map_values() {
