@@ -5,6 +5,7 @@ var combinations = require('@aureooms/js-itertools/src/map/combinations.js').com
 
 var FileUploader = require('./tools/file-uploader.js');
 var Heatmap = require('./heatmap/heatmap.js');
+var ParallelCoordinates = require('./tools/parallel-coordinates.js');
 
 var SLIDER_TEMPLATE = `
 <div class="slider-box">
@@ -146,8 +147,9 @@ $(document).ready(() => {
     var sliderContainer = $('#slider-container');
     console.log(data);
     var heatMaps = generate_heat_maps(data);
-    generate_sliders(sliderContainer, data, heatMaps);
+    //generate_sliders(sliderContainer, data, heatMaps);
+    var parallelCoordinates = new ParallelCoordinates('#parcoords', data);
     // Fake a slider moving to generate first set of results
-    slider_changed(heatMaps);
+    //slider_changed(heatMaps);
   });
 });

@@ -21,8 +21,13 @@ Upload
 </div>
 
 <div class="row">
-	<div class="one-half column" id="slider-container"></div>
-	<div class="one-half column" id="results-container"></div>
+	<div class="whole column" id="slider-container2">
+		<div id="parcoords" class="parcoords" style="width:100%;height:350px;"></div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="whole column" id="results-container"></div>
 </div>
 
 <div class="row">
@@ -33,8 +38,10 @@ Upload
 
 {% block css %}
 <link rel="stylesheet" href="/static/css/upload.css">
+<link rel="stylesheet" type="text/css" href="/static/css/parcoords.css">
 {% endblock %}
 
 {% block javascript %}
 <script src="/static/js/upload.js"></script>
+<script src="/static/js/parcoords.standalone.js"></script>
 {% endblock %}
