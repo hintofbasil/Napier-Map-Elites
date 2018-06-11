@@ -2,7 +2,7 @@ class ParallelCoordinates {
 
   constructor(elementId, data) {
     this.data = data;
-    var graph = ParCoords()(elementId)
+    var graph = d3.parcoords()(elementId)
       .data(this.get_data())
       .dimensions(this.get_dimensions())
       .render()
