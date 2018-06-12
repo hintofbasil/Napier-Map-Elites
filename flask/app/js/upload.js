@@ -7,18 +7,6 @@ var FileUploader = require('./tools/file-uploader.js');
 var Heatmap = require('./heatmap/heatmap.js');
 var ParallelCoordinates = require('./tools/parallel-coordinates.js');
 
-var SLIDER_TEMPLATE = `
-<div class="slider-box">
-  <h3>%s</h3>
-  <div>
-    <input class="filter-slider" type="range" min=%d max=%d orient=vertical />
-    <span class="slider-max">%d</span>
-    <span class="slider-current">%d</span>
-    <span class="slider-min">%d</span>
-  </div>
-</div>
-`;
-
 var RESULTS_TEMPLATE = `
 <div class="results-div">
   <div class="results-div-row">
@@ -81,38 +69,6 @@ function load_csv(text) {
   output['distanceRange'] = distanceRange;
   return output;
 };
-
-function generate_sliders(container, data, heatMaps) {
-  container.empty();
-  data['keys'].forEach((key, i) => {
-    var range = data['ranges'][i];
-    var start = Math.floor((range[1]+range[0])/2);
-    var element = $(sprintf(SLIDER_TEMPLATE, key, range[0], range[1], range[1], start, range[0]));
-    element.on('change', () => { slider_changed(heatMaps) } );
-    container.append(element);
-  });
-}
-
-function slider_changed(heatMaps) {
-  var sliderContainer = $('#slider-container');
-  var values = [];
-  sliderContainer.children().toArray().forEach((sliderBox) => {
-    var value = sliderBox.children[1].children[0].value;
-    $(sliderBox).find('.slider-current').html(value);
-    values.push(value);
-  });
-  var key = values.join(':');
-  display_data(data['data'][key]);
-
-  // Update heat maps
-  for (var i=0; i<values.length; i++) {
-    var k = data.keys[i];
-    var v = values[i];
-    for (var heatMap of heatMaps) {
-      heatMap.change_highlight(k, v);
-    }
-  }
-}
 
 function display_data(count, data) {
   var container = $('#results-container');
