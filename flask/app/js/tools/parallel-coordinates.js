@@ -1,12 +1,18 @@
 class ParallelCoordinates {
 
-  constructor(elementId, data) {
+  constructor(elementId, data, onFiltered) {
     this.data = data;
+    this.onFiltered = onFiltered;
     var graph = d3.parcoords()(elementId)
       .data(this.get_data())
       .dimensions(this.get_dimensions())
       .render()
-      .createAxes();
+      .createAxes()
+      .brushMode('1D-axes');
+    graph.on('brush', (filtered) => {
+      var elements = filtered.map((l) => { return this.data.data[l.join(':')]; } );
+      this.onFiltered(filtered.length, elements);
+    });
   }
 
   get_data() {

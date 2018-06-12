@@ -110,14 +110,18 @@ function slider_changed(heatMaps) {
   }
 }
 
-function display_data(data) {
+function display_data(count, data) {
   var container = $('#results-container');
   container.empty();
-  if (!data) {
+  if (count == 0) {
     var output = sprintf(RESULTS_TABLE_TEMPLATE, "No results found", "");
+    container.append(output);
+  } else if (count > 1) {
+    var output = sprintf(RESULTS_TABLE_TEMPLATE, "Too many results found", "");
     container.append(output);
   } else {
     var rows = "";
+    data = data[0];
     Object.entries(data).forEach(([key, value]) => {
       rows += sprintf(RESULTS_TABLE_ROW_TEMPLATE, key, value[1]);
     });
@@ -148,7 +152,7 @@ $(document).ready(() => {
     console.log(data);
     var heatMaps = generate_heat_maps(data);
     //generate_sliders(sliderContainer, data, heatMaps);
-    var parallelCoordinates = new ParallelCoordinates('#parcoords', data);
+    var parallelCoordinates = new ParallelCoordinates('#parcoords', data, display_data);
     // Fake a slider moving to generate first set of results
     //slider_changed(heatMaps);
   });
