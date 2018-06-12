@@ -2,3 +2,22 @@
   height: 300px;
   width: 100%;
 }
+
+.results-div-row {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+
+  .bold {
+    font-weight: bold;
+  }
+
+  >span {
+    display: table-cell;
+    text-align: center;
+  }
+
+  span:empty:before {
+    content: "\200b"; // unicode zero width space character
+  }
+}

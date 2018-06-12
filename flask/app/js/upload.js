@@ -19,21 +19,25 @@ var SLIDER_TEMPLATE = `
 </div>
 `;
 
-var RESULTS_TABLE_TEMPLATE = `
-<table>
-  <tr>
-    <th colspan="2">%s</th>
-  </tr>
-  %s
-</table>
+var RESULTS_TEMPLATE = `
+<div class="results-div">
+  <div class="results-div-row">
+    %s
+  </div>
+  <div class="results-div-row">
+    %s
+  </div>
+  <div class="results-div-row">
+    %s
+  </div>
+  <div class="results-div-row">
+    %s
+  </div>
+</div>
 `;
 
-var RESULTS_TABLE_ROW_TEMPLATE = `
-<tr>
-  <td>%s</td>
-  <td>%f</td>
-</tr>
-`;
+var RESULTS_ELEMENT = '<span>%s</span>';
+var RESULTS_ELEMENT_BOLD = '<span class="bold">%s</span>';
 
 function load_csv(text) {
   var output = {};
@@ -112,20 +116,39 @@ function slider_changed(heatMaps) {
 
 function display_data(count, data) {
   var container = $('#results-container');
+  var headers = this.data.keys.map((key) => {
+    return sprintf(RESULTS_ELEMENT_BOLD, key);
+  }).join('\n');
   container.empty();
   if (count == 0) {
-    var output = sprintf(RESULTS_TABLE_TEMPLATE, "No results found", "");
+    var title = sprintf(RESULTS_ELEMENT_BOLD, 'No results found');
+    var summary = sprintf(RESULTS_ELEMENT, '');
+    var values = this.data.keys.map((key) => {
+      return sprintf(RESULTS_ELEMENT, '-');
+    }).join('\n');
+    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
     container.append(output);
   } else if (count > 1) {
-    var output = sprintf(RESULTS_TABLE_TEMPLATE, "Too many results found", "");
+    var title = sprintf(RESULTS_ELEMENT_BOLD, 'Too many results found');
+    var summary = sprintf(RESULTS_ELEMENT, '');
+    var values = this.data.keys.map((key) => {
+      return sprintf(RESULTS_ELEMENT, '-');
+    }).join('\n');
+    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
     container.append(output);
   } else {
-    var rows = "";
-    data = data[0];
-    Object.entries(data).forEach(([key, value]) => {
-      rows += sprintf(RESULTS_TABLE_ROW_TEMPLATE, key, value[1]);
-    });
-    var output = sprintf(RESULTS_TABLE_TEMPLATE, "Results", rows);
+    var element = data[0];
+    console.log('Found result: ', element);
+    var title = sprintf(RESULTS_ELEMENT_BOLD, 'Result found');
+    var summary = sprintf(RESULTS_ELEMENT,
+      sprintf('%s%f',
+        sprintf(RESULTS_ELEMENT_BOLD, 'Distance:   '),
+        element['distance'][1])
+    );
+    var values = this.data.keys.map((key) => {
+      return sprintf(RESULTS_ELEMENT, element[key][1]);
+    }).join('\n');
+    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
     container.append(output);
   }
 }
