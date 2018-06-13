@@ -11,7 +11,7 @@ class ParallelCoordinates {
       .brushMode('1D-axes');
     graph.on('brush', (filtered) => {
       var elements = filtered.map((l) => { return this.data.data[l.join(':')]; } );
-      this.onFiltered(filtered.length, elements);
+      this.onFiltered(elements);
     });
   }
 

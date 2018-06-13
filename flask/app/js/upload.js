@@ -70,16 +70,17 @@ function load_csv(text) {
   return output;
 };
 
-function display_data(count, data) {
+function update_results(results) {
+  var count = results.length;
   var container = $('#results-container');
-  var headers = this.data.keys.map((key) => {
+  var headers = data.keys.map((key) => {
     return sprintf(RESULTS_ELEMENT_BOLD, key);
   }).join('\n');
   container.empty();
   if (count == 0) {
     var title = sprintf(RESULTS_ELEMENT_BOLD, 'No results found');
     var summary = sprintf(RESULTS_ELEMENT, '');
-    var values = this.data.keys.map((key) => {
+    var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
     var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
@@ -87,13 +88,13 @@ function display_data(count, data) {
   } else if (count > 1) {
     var title = sprintf(RESULTS_ELEMENT_BOLD, 'Too many results found');
     var summary = sprintf(RESULTS_ELEMENT, '');
-    var values = this.data.keys.map((key) => {
+    var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
     var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
     container.append(output);
   } else {
-    var element = data[0];
+    var element = results[0];
     console.log('Found result: ', element);
     var title = sprintf(RESULTS_ELEMENT_BOLD, 'Result found');
     var summary = sprintf(RESULTS_ELEMENT,
@@ -101,7 +102,7 @@ function display_data(count, data) {
         sprintf(RESULTS_ELEMENT_BOLD, 'Distance:   '),
         element['distance'][1])
     );
-    var values = this.data.keys.map((key) => {
+    var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, element[key][1]);
     }).join('\n');
     var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
@@ -122,16 +123,33 @@ function generate_heat_maps(data) {
   return maps;
 }
 
+function update_heatmaps(elements) {
+  if (elements.length == 1) {
+    for (var key of data.keys) {
+      for (var heatmap of heatmaps) {
+        console.log(heatmap, key, elements[0][key][0]);
+        heatmap.change_highlight(key, elements[0][key][0]);
+      }
+    }
+  }
+}
+
+function on_result_found(elements) {
+  update_results(elements);
+  update_heatmaps(elements);
+}
+
 var data;
+var heatmaps;
 
 $(document).ready(() => {
   new FileUploader('file-dropper', 'file-chooser', (text) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     console.log(data);
-    var heatMaps = generate_heat_maps(data);
+    heatmaps = generate_heat_maps(data);
     //generate_sliders(sliderContainer, data, heatMaps);
-    var parallelCoordinates = new ParallelCoordinates('#parcoords', data, display_data);
+    var parallelCoordinates = new ParallelCoordinates('#parcoords', data, on_result_found);
     // Fake a slider moving to generate first set of results
     //slider_changed(heatMaps);
   });
