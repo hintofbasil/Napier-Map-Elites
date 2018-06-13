@@ -31,9 +31,8 @@ class Heatmap {
       for (var j=0; j<=(dimensions[2] - dimensions[0]); j++) {
         var cell = document.createElement("td");
         var entries = values[i][j];
-        var style = entries.length > 0 ? "background:" + this.get_cell_color(entries) : ""
         cell.className = entries.length > 0 ? "heat-map-found" : "heat-map-not-found";
-        cell.style = style;
+        cell.style.background = entries.length > 0 ? this.get_cell_color(entries) : "";
         cell.entries = entries;
         cell.addEventListener('click', (e) => {
           this.callback(e, e.target.entries);
@@ -102,25 +101,29 @@ class Heatmap {
     return ids;
   }
 
-  change_highlight(key, value) {
-    if (key == this.myKeys[0]) {
-      var offset = this.data.ranges[this.keys.indexOf(key)][0];
-      this.toHighlight[0] = value - offset;
+  change_highlight(elements) {
+    var table = this.base.children[0];
+    for (var row of table.children) {
+      for (var element of row.children) {
+        element['data-in-selection'] = false;
+      }
     }
-    if (key == this.myKeys[1]) {
-      var offset = this.data.ranges[this.keys.indexOf(key)][0];
-      var range = this.data.ranges[this.keys.indexOf(key)][1] -
-        this.data.ranges[this.keys.indexOf(key)][0]
-      this.toHighlight[1] = range - (value - offset);
+    for (var element of elements) {
+      var lowerX = this.data.ranges[this.data.keys.indexOf(this.myKeys[0])][0];
+      var lowerY = this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][0];
+      var upperY = this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][1];
+      var x = element[this.myKeys[0]][0] - lowerX;
+      var y = (upperY - lowerY) - (element[this.myKeys[1]][0] - lowerY);
+      table.children[y].children[x]['data-in-selection'] = true;
     }
-    var table = this.base.children[0]
     for (var j=0; j<table.children.length; j++) {
       var row = table.children[j];
       for (var i=0; i<row.children.length; i++) {
         var cell = row.children[i];
-        $(cell).removeClass('heat-map-selected');
-        if (i == this.toHighlight[0] && j == this.toHighlight[1]) {
-          $(cell).addClass('heat-map-selected');
+        if (cell['data-in-selection']) {
+          cell.style.opacity = "1";
+        } else {
+          cell.style.opacity = "0.3";
         }
       }
     }

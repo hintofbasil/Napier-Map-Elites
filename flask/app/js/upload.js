@@ -124,13 +124,8 @@ function generate_heat_maps(data) {
 }
 
 function update_heatmaps(elements) {
-  if (elements.length == 1) {
-    for (var key of data.keys) {
-      for (var heatmap of heatmaps) {
-        console.log(heatmap, key, elements[0][key][0]);
-        heatmap.change_highlight(key, elements[0][key][0]);
-      }
-    }
+  for (var heatmap of heatmaps) {
+    heatmap.change_highlight(elements);
   }
 }
 
