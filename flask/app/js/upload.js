@@ -143,9 +143,9 @@ $(document).ready(() => {
     var sliderContainer = $('#slider-container');
     console.log(data);
     heatmaps = generate_heat_maps(data);
-    //generate_sliders(sliderContainer, data, heatMaps);
     var parallelCoordinates = new ParallelCoordinates('#parcoords', data, on_result_found);
-    // Fake a slider moving to generate first set of results
-    //slider_changed(heatMaps);
+    // Create results table.  Any input with length > 1 esults in too many
+    // resutls message
+    update_results([1,1]);
   });
 });
