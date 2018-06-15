@@ -6103,7 +6103,7 @@
         var brushed = selected$4(brushGroup, state, config);
         config.brushed = brushed;
         pc.renderBrushed();
-        events.call('brushend', pc, config.brushed);
+        events.call('brush', pc, config.brushed);
       };
     };
 
