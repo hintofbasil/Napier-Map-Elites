@@ -7,6 +7,7 @@ class ParallelCoordinates {
       .data(this.get_data())
       .dimensions(this.get_dimensions())
       .render()
+      .shadows()
       .createAxes()
       .brushMode('1D-points');
     graph.on('brush', (filtered) => {
