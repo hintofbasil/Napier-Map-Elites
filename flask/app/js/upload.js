@@ -144,8 +144,8 @@ $(document).ready(() => {
     console.log(data);
     heatmaps = generate_heat_maps(data);
     var parallelCoordinates = new ParallelCoordinates('#parcoords', data, on_result_found);
-    // Create results table.  Any input with length > 1 esults in too many
-    // resutls message
+    // Create results table.  Any input with length > 1 results in too many
+    // results message
     update_results([1,1]);
   });
 });
