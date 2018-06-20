@@ -6165,6 +6165,19 @@
 
         _drag.on('start', onDragStart$2(brushGroup, state, config, pc, events, axis, _selector)).on('drag', onDrag$2(brushGroup, state, config, pc, events)).on('end', onDragEnd$2(brushGroup, state, config, pc, events));
 
+        _selector.on('contextmenu', function () {
+          event.preventDefault();
+          if (state.sliderKnobs[axis] !== undefined) {
+            state.sliderKnobs[axis].remove();
+            delete state.sliderKnobs[axis];
+          }
+          delete state.sliderData[axis];
+          var brushed = selected$4(brushGroup, state, config);
+          config.brushed = brushed;
+          pc.renderBrushed();
+          events.call('brush', pc, config.brushed);
+        });
+
         slider.call(_drag);
 
         state.sliders[axis] = slider;
