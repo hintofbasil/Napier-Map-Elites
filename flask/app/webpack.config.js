@@ -25,6 +25,8 @@ module.exports = {
     path: path.resolve(__dirname, 'static')
   },
 
+  devtool: 'source-map',
+
   // Sass
   module: {
     rules: [{
