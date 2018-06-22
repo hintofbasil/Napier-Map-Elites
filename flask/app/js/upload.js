@@ -7,6 +7,16 @@ var FileUploader = require('./tools/file-uploader.js');
 var Heatmap = require('./heatmap/heatmap.js');
 var ParallelCoordinates = require('./tools/parallel-coordinates.js');
 
+var DETAILS_TEMPLATE = `
+<div id="details">
+  <div class="details-evals">Evaluations: %d</div>
+  <div class="details-filename">%s</div>
+  <div class="reset-container">
+    <img id="pc-refresh" src="/static/images/refresh.svg" />
+  </div>
+</div>
+`;
+
 var RESULTS_TEMPLATE = `
 <div class="results-div">
   <div class="results-div-row">
@@ -134,16 +144,22 @@ function on_result_found(elements) {
   update_heatmaps(elements);
 }
 
+function generate_display(data, filename) {
+  var container = document.getElementById('details-container');
+  container.innerHTML = sprintf(DETAILS_TEMPLATE, data.evals, filename);
+}
+
 var data;
 var heatmaps;
 
 $(document).ready(() => {
-  new FileUploader('file-dropper', 'file-chooser', (text) => {
+  new FileUploader('file-dropper', 'file-chooser', (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     console.log(data);
     heatmaps = generate_heat_maps(data);
-    var parallelCoordinates = new ParallelCoordinates('#parcoords', data, on_result_found);
+    generate_display(data, filename);
+    var parallelCoordinates = new ParallelCoordinates('#parcoords', 'pc-refresh', data, on_result_found);
     // Create results table.  Any input with length > 1 results in too many
     // results message
     update_results([1,1]);

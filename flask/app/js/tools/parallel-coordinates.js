@@ -2,7 +2,7 @@ require('d3-scale');
 
 class ParallelCoordinates {
 
-  constructor(elementId, data, onFiltered) {
+  constructor(elementId, refreshId, data, onFiltered) {
 
     var scale = d3.scaleLinear()
         .domain([data.distanceRange[1], data.distanceRange[0]])
@@ -32,6 +32,11 @@ class ParallelCoordinates {
     graph.on('brush', (filtered) => {
       var elements = filtered.map((l) => { return this.data.data[l.join(':')]; } );
       this.onFiltered(elements);
+    });
+
+    var refresh = document.getElementById(refreshId);
+    refresh.addEventListener('click', e => {
+      graph.brushReset();
     });
   }
 
