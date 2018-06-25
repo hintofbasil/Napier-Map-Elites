@@ -6067,53 +6067,7 @@
       };
     };
 
-    var onDrag$2 = function onDrag(brushGroup, state, config, pc, events) {
-      return function () {
-        var axis = state.active;
-        var slider = state.sliders[axis];
-        var knob = state.sliderKnobs[axis];
-        var p = mouse(slider.node());
-
-        p[0] = p[0] - config.margin.left;
-        p[1] = p[1];
-
-        // Create knob if doesn't exist
-        if (knob === undefined) {
-          knob = _selector.append('rect').attr('class', 'slider-knob').attr('height', 4).attr('width', 20).attr('x', -10).attr('fill', '#444d');
-          state.sliderKnobs[axis] = knob;
-        }
-
-        state.active = axis;
-
-        var height = slider.attr('height');
-        var dimensions = config.dimensions[axis].yscale.domain();
-        var value = Math.round(d3.scaleLinear().domain([0, height]).range([dimensions[1], dimensions[0]])(p[1]));
-
-        var newY = d3.scaleLinear().clamp(true).domain([dimensions[1], dimensions[0]]).range([0, height])(value);
-
-        newY -= knob.attr('height') / 2;
-
-        knob.attr('y', newY);
-
-        var data = {
-          axis: axis,
-          value: value
-        };
-
-        state.sliderData[axis] = data;
-
-        var brushed = selected$4(brushGroup, state, config);
-        config.brushed = brushed;
-        pc.renderBrushed();
-        events.call('brush', pc, config.brushed);
-      };
-    };
-
-    // First we need to determine between which two axes the sturm was started.
-    // This will determine the freedom of movement, because a strum can
-    // logically only happen between two axes, so no movement outside these axes
-    // should be allowed.
-    var onDragStart$2 = function onDragStart(brushGroup, state, config, pc, events, axis, _selector) {
+    var onDrag$2 = function onDrag(brushGroup, state, config, pc, events, axis, _selector) {
       return function () {
         //let p = mouse(state.strumRect.node());
         var slider = state.sliders[axis];
@@ -6139,19 +6093,21 @@
 
         newY -= knob.attr('height') / 2;
 
-        knob.attr('y', newY);
+        if (newY != knob.attr('y')) {
+          knob.attr('y', newY);
 
-        var data = {
-          axis: axis,
-          value: value
-        };
+          var data = {
+            axis: axis,
+            value: value
+          };
 
-        state.sliderData[axis] = data;
+          state.sliderData[axis] = data;
 
-        var brushed = selected$4(brushGroup, state, config);
-        config.brushed = brushed;
-        pc.renderBrushed();
-        events.call('brush', pc, config.brushed);
+          var brushed = selected$4(brushGroup, state, config);
+          config.brushed = brushed;
+          pc.renderBrushed();
+          events.call('brush', pc, config.brushed);
+        }
       };
     };
 
@@ -6163,7 +6119,7 @@
 
         var _drag = drag();
 
-        _drag.on('start', onDragStart$2(brushGroup, state, config, pc, events, axis, _selector)).on('drag', onDrag$2(brushGroup, state, config, pc, events)).on('end', onDragEnd$2(brushGroup, state, config, pc, events));
+        _drag.on('start', onDrag$2(brushGroup, state, config, pc, events, axis, _selector)).on('drag', onDrag$2(brushGroup, state, config, pc, events, axis, _selector)).on('end', onDragEnd$2(brushGroup, state, config, pc, events));
 
         _selector.on('contextmenu', function () {
           event.preventDefault();
@@ -6191,10 +6147,15 @@
         config.brushed = false;
         if (pc.g() !== undefined && pc.g() !== null) {
           pc.g().selectAll('.slider-knob').remove();
-          pc.renderBrushed();
         }
         state.sliderKnobs = {};
+        state.sliderData = {};
         state.active = undefined;
+
+        var brushed = selected$4(brushGroup, state, config);
+        config.brushed = brushed;
+        pc.renderBrushed();
+        events.call('brush', pc, config.brushed);
       };
     };
 
