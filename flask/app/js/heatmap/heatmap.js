@@ -1,5 +1,6 @@
 class Heatmap {
-  constructor(elementId, data, myKeys, callback) {
+  constructor(elementId, data, myKeys, colouring_method, callback) {
+    this.colouring_method = colouring_method;
     this.container = document.getElementById(elementId);
     this.toHighlight = [0, 0];
     this.data = data;
@@ -129,13 +130,42 @@ class Heatmap {
     }
   }
 
+  change_colouring_method(type) {
+    this.colouring_method = type;
+
+    // Set cell colours
+    var values = this.get_map_values();
+    var table = this.base.children[0];
+    for (var j=0; j<table.children.length; j++) {
+      var row = table.children[j];
+      for (var i=0; i<row.children.length; i++) {
+        var cell = row.children[i];
+        var entries = values[j][i];
+        cell.style.background = entries.length > 0 ? this.get_cell_color(entries) : "";
+      }
+    }
+  }
+
   get_cell_color(entries) {
-    var shortest = entries.reduce((a, b) => {
-      return a.distance[1] < b.distance[1] ? a : b;
-    });
+    var cell_value = this.get_cell_colouring_value(entries);
     var r = this.range[1] - this.range[0];
-    var percent = (shortest.distance[1] - this.range[0]) / r;
+    var percent = (cell_value - this.range[0]) / r;
     return this.get_color(percent);
+  }
+
+
+  get_cell_colouring_value(entries) {
+    if (this.colouring_method === 'best') {
+      return entries.reduce((a, b) => {
+        return a.distance[1] < b.distance[1] ? a : b;
+      }).distance[1];
+    } else if (this.colouring_method === 'average') {
+      return entries.reduce((a, b) => {
+        return a + b.distance[1];
+      }, 0) / entries.length;
+    } else {
+      console.error('Invalid colouring_method "' + this.colouring_method + '"');
+    }
   }
 
   // Taken from https://stackoverflow.com/a/17268489

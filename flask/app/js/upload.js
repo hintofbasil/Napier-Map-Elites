@@ -122,14 +122,21 @@ function update_results(results) {
 
 function generate_heat_maps(data) {
   document.getElementById('heatmaps').innerHTML = '';
+  document.getElementById('heatmaps-dropdown-container').style = '';
+  var dropdown = document.getElementById('heatmaps-dropdown');
   var pairs = combinations(data.keys, 2);
   var maps = [];
   for (var pair of pairs) {
-    var map = new Heatmap('heatmaps', data, pair, (e, info) => {
+    var map = new Heatmap('heatmaps', data, pair, dropdown.value, (e, info) => {
       console.log(info);
     });
     maps.push(map);
   }
+  dropdown.addEventListener('change', (e) => {
+    maps.forEach(m => {
+      m.change_colouring_method(e.target.value);
+    });
+  });
   return maps;
 }
 
