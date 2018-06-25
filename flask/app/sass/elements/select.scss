@@ -1,0 +1,18 @@
+select {
+  background: none;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  margin: 0;
+  padding: 0 24px 0 0;
+}
+
+.dropdown-container {
+  background-image: url(/static/images/expand.svg);
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding: 0;
+  display: inline-block;
+  cursor: select;
+}
