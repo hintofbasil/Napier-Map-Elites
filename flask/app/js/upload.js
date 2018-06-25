@@ -12,6 +12,13 @@ var DETAILS_TEMPLATE = `
   <div class="details-evals">Evaluations: %d</div>
   <div class="details-filename">%s</div>
   <div class="reset-container">
+    <div class="whole column" id="heatmaps-dropdown-container">
+      <div id="heatmaps-dropdown-container" class="dropdown-container">
+        <select id="heatmaps-dropdown">
+          <option value="average">Average</option>
+          <option value="best">Best</option>
+        </select>
+      </div>
     <img id="pc-refresh" src="/static/images/refresh.svg" />
   </div>
 </div>
@@ -122,21 +129,14 @@ function update_results(results) {
 
 function generate_heat_maps(data) {
   document.getElementById('heatmaps').innerHTML = '';
-  document.getElementById('heatmaps-dropdown-container').style = '';
-  var dropdown = document.getElementById('heatmaps-dropdown');
   var pairs = combinations(data.keys, 2);
   var maps = [];
   for (var pair of pairs) {
-    var map = new Heatmap('heatmaps', data, pair, dropdown.value, (e, info) => {
+    var map = new Heatmap('heatmaps', data, pair, 'average', (e, info) => {
       console.log(info);
     });
     maps.push(map);
   }
-  dropdown.addEventListener('change', (e) => {
-    maps.forEach(m => {
-      m.change_colouring_method(e.target.value);
-    });
-  });
   return maps;
 }
 
@@ -151,9 +151,15 @@ function on_result_found(elements) {
   update_heatmaps(elements);
 }
 
-function generate_display(data, filename) {
+function generate_display(data, filename, heatmaps) {
   var container = document.getElementById('details-container');
   container.innerHTML = sprintf(DETAILS_TEMPLATE, data.evals, filename);
+  var heatmapsDropdown = document.getElementById('heatmaps-dropdown');
+  heatmapsDropdown.addEventListener('change', (e) => {
+    for (var heatmap of heatmaps) {
+      heatmap.change_colouring_method(e.target.value);
+    }
+  });
 }
 
 var data;
@@ -165,7 +171,7 @@ $(document).ready(() => {
     var sliderContainer = $('#slider-container');
     console.log(data);
     heatmaps = generate_heat_maps(data);
-    generate_display(data, filename);
+    generate_display(data, filename, heatmaps);
     var parallelCoordinates = new ParallelCoordinates('#parcoords', 'pc-refresh', data, on_result_found);
     // Create results table.  Any input with length > 1 results in too many
     // results message
