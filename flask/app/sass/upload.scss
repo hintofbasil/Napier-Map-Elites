@@ -47,6 +47,26 @@ h3 {
   }
 }
 
+#details .details-evals {
+  float: left;
+  width: 33.3333%;
+  text-align: left;
+}
+
+#details .details-filename {
+  float: left;
+  width: 33.3333%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+#details .reset-container {
+  float: left;
+  width: 33.3333%;
+  text-align: right;
+}
+
 @media screen and (min-width: 640px) {
   #slider-container {
     div {
