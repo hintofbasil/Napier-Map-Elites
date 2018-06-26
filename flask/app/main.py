@@ -10,7 +10,7 @@ app.config.from_object('config.' + os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
 
-from views.api import *
+from views.solutions import *
 from views.templates import *
 
 @app.cli.command()
