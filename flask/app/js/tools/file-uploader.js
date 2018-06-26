@@ -23,9 +23,9 @@ class FileUploader {
       var reader = new FileReader();
       reader.onload = () => {
         this.file_chosen();
-        this.onRead(reader.result, file.target.fileName);
+        this.onRead(reader.result, reader.fileName);
       };
-      reader.fileName = e.target.files[0].name;
+      reader.fileName = e.dataTransfer.files[0].name;
       reader.readAsText(e.dataTransfer.files[0]);
     };
 
@@ -33,7 +33,7 @@ class FileUploader {
       var reader = new FileReader();
       reader.onload = (file) => {
         this.file_chosen();
-        this.onRead(reader.result, file.target.fileName);
+        this.onRead(reader.result, reader.fileName);
       };
       reader.fileName = e.target.files[0].name;
       reader.readAsText(e.target.files[0]);
