@@ -3,6 +3,40 @@ var sprintf = require('sprintf-js').sprintf;
 
 let KML = require('.././node_modules/leaflet-plugins/layer/vector/KML.js');
 
+var BUTTON_HTML = `
+  <div>%s</div>
+`;
+
+var details = {};
+
+function add_kml_button(containerId, filename, map) {
+  var container = document.getElementById(containerId);
+  var button = document.createElement('div')
+  button.innerHTML = filename;
+  button.setAttribute('data-enabled', 1);
+  container.append(button);
+  details[filename]['button'] = button;
+  button.addEventListener('click', e => {
+    if (button.getAttribute('data-enabled') == 1) {
+      button.setAttribute('data-enabled', 0);
+      hide_kml(filename, map);
+    } else {
+      button.setAttribute('data-enabled', 1);
+      show_kml(filename, map);
+    }
+  });
+}
+
+function hide_kml(filename, map) {
+  var kml = details[filename]['kml'];
+  map.removeLayer(kml);
+}
+
+function show_kml(filename, map) {
+  var kml = details[filename]['kml'];
+  map.addLayer(kml);
+}
+
 function add_kml(solution_hash, solution_key, filename, map) {
   var url = sprintf('/solution_kmls/%s/%s/%s', solution_hash, solution_key, filename);
 
@@ -14,8 +48,14 @@ function add_kml(solution_hash, solution_key, filename, map) {
       e.target.getBounds();
     map.bounded = true;
     map.fitBounds(bounds);
+
+    // Add button to DOM
+    add_kml_button('map-toggles-container',
+      filename,
+      map);
   });
 
+  details[filename]['kml'] = kml;
   map.addLayer(kml);
 }
 
@@ -30,6 +70,7 @@ function fetch_kml_list(solution_hash, solution_key, map) {
       }
       response.json().then(data => {
         for (var filename of data) {
+          details[filename] = {};
           add_kml(solution_hash,
             solution_key,
             filename,
