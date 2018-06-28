@@ -1,7 +1,7 @@
 import os
 from zipfile import ZipFile
 
-from flask import abort, jsonify, render_template
+from flask import abort, jsonify, render_template, Response
 from flask_api import status
 import markdown
 
@@ -76,5 +76,8 @@ def get_solution_kml(solution_hash, solution_key, file_name):
         found = [x for x in files if x == f'{solution_key}/{file_name}']
         if found:
             with z.open(found[0], 'r') as f:
-                return f.read().decode('utf-8')
+                return Response(
+                    f.read().decode('utf-8'),
+                    mimetype='text/xml'
+                )
         abort(404)
