@@ -42,4 +42,39 @@ def get_solution(solution_hash, solution_key):
         if markdownFile:
             with z.open(markdownFile[0], 'r') as mf:
                 html = markdown.markdown(mf.read().decode('utf-8'))
-                return render_template('solution.html', content=html)
+                return render_template('solution.html', content=html,
+                                      solution_hash=solution_hash,
+                                       solution_key=solution_key)
+
+@app.route('/solution_kmls/<solution_hash>/<solution_key>', methods=['GET'])
+def get_solution_kmls(solution_hash, solution_key):
+    path = os.path.join(
+        app.config['SOLUTION_UPLOAD_FOLDER'], solution_hash + '.zip'
+    )
+    if not os.path.exists(path):
+        abort(404)
+    with ZipFile(path, 'r') as z:
+        files = [x for x in z.namelist() if x.startswith(solution_key)]
+        if not files:
+            abort(404)
+        keyLength = len(solution_key)
+        kmlFiles = [x[keyLength + 1:] for x in files if x.endswith('.kml')]
+        return jsonify(kmlFiles)
+
+@app.route('/solution_kmls/<solution_hash>/<solution_key>/<file_name>', methods=['GET'])
+def get_solution_kml(solution_hash, solution_key, file_name):
+    path = os.path.join(
+        app.config['SOLUTION_UPLOAD_FOLDER'], solution_hash + '.zip'
+    )
+    if not os.path.exists(path):
+        abort(404)
+    with ZipFile(path, 'r') as z:
+        files = [x for x in z.namelist() if x.startswith(solution_key)]
+        if not files:
+            abort(404)
+        keyLength = len(solution_key)
+        found = [x for x in files if x == f'{solution_key}/{file_name}']
+        if found:
+            with z.open(found[0], 'r') as f:
+                return f.read().decode('utf-8')
+        abort(404)
