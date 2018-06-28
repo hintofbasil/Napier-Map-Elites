@@ -1,0 +1,7 @@
+div[data-enabled="1"]:after {
+  content: url('/static/images/visible.svg');
+}
+
+div[data-enabled="0"]:after {
+  content: url('/static/images/invisible.svg');
+}
