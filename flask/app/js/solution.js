@@ -9,7 +9,11 @@ function add_kml(solution_hash, solution_key, filename, map) {
   var kml = new Leaflet.KML(url, {async: true});
 
   kml.on('loaded', e => {
-    map.fitBounds(e.target.getBounds());
+    var bounds = map.bounded ?
+      e.target.getBounds().extend(map.getBounds()) :
+      e.target.getBounds();
+    map.bounded = true;
+    map.fitBounds(bounds);
   });
 
   map.addLayer(kml);
