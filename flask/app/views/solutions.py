@@ -42,4 +42,4 @@ def get_solution(solution_hash, solution_key):
         if markdownFile:
             with z.open(markdownFile[0], 'r') as mf:
                 html = markdown.markdown(mf.read().decode('utf-8'))
-                return render_template('base.html', content=html)
+                return render_template('solution.html', content=html)
