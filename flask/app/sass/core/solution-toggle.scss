@@ -1,9 +1,15 @@
-div[data-enabled="1"]:after {
-  content: url('/static/images/visible.svg');
+div[data-enabled="1"] img {
+  mask: url('/static/images/visible.svg') no-repeat;
+  background-size: cover;
+  margin-left: 5px;
+  padding: 1px 20px;
 }
 
-div[data-enabled="0"]:after {
-  content: url('/static/images/invisible.svg');
+div[data-enabled="0"] img {
+  mask: url('/static/images/invisible.svg') no-repeat;
+  padding: 1px 20px;
+  margin-left: 5px;
+  background-size: cover;
 }
 
 #map-toggles-container div {

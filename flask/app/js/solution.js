@@ -9,14 +9,23 @@ var BUTTON_HTML = `
 
 var details = {};
 
-function add_kml_button(containerId, filename, map) {
+function add_kml_button(containerId, filename, map, color) {
   var container = document.getElementById(containerId);
   var button = document.createElement('div');
-  button.innerHTML = filename;
   button.setAttribute('data-enabled', 1);
+  button.style['color'] = color;
+
+  var text = document.createElement('span');
+  text.innerHTML = filename;
+  button.appendChild(text);
+
+  var icon = document.createElement('img');
+  icon.style['background-color'] = color;
+  button.appendChild(icon);
+
   var inserted = false;
   for (var child of container.children) {
-    if (filename < child.innerHTML) {
+    if (filename < child.children[0].innerHTML) {
       container.insertBefore(button, child);
       inserted = true;
       break;
@@ -59,10 +68,20 @@ function add_kml(solution_hash, solution_key, filename, map) {
     map.bounded = true;
     map.fitBounds(bounds);
 
+    var color = function(){
+      for (var obj of Object.values(e.target._layers)) {
+        if (obj.options && obj.options.color) {
+          return obj.options.color;
+        }
+      }
+      return "#3388ff";
+    }();
+
     // Add button to DOM
     add_kml_button('map-toggles-container',
       filename,
-      map);
+      map,
+      color);
   });
 
   details[filename]['kml'] = kml;
