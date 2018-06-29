@@ -8,7 +8,9 @@
     "babel-polyfill": "^6.26.0",
     "d3-scale": "^2.1.0",
     "email-scramble": "^2.0.1",
-    "regenerator-runtime": "^0.11.1"
+    "material-design-icons": "^3.0.1",
+    "regenerator-runtime": "^0.11.1",
+    "url-loader": "^1.0.1"
   },
   "devDependencies": {
     "css-loader": "^0.28.11",
