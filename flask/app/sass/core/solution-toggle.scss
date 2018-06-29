@@ -1,12 +1,12 @@
 div[data-enabled="1"] img {
-  mask: url('/static/images/visible.svg') no-repeat;
+  mask: url('/static/images/visible.svg') no-repeat 50%;
   background-size: cover;
   margin-left: 5px;
   padding: 1px 20px;
 }
 
 div[data-enabled="0"] img {
-  mask: url('/static/images/invisible.svg') no-repeat;
+  mask: url('/static/images/invisible.svg') no-repeat 50%;
   padding: 1px 20px;
   margin-left: 5px;
   background-size: cover;
