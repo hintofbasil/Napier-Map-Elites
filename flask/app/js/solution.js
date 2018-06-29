@@ -11,7 +11,7 @@ var details = {};
 
 function add_kml_button(containerId, filename, map) {
   var container = document.getElementById(containerId);
-  var button = document.createElement('div')
+  var button = document.createElement('div');
   button.innerHTML = filename;
   button.setAttribute('data-enabled', 1);
   var inserted = false;
