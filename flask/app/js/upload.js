@@ -1,4 +1,5 @@
 var sprintf = require('sprintf-js').sprintf;
+var md5sum = require('md5');
 
 require( 'babel-polyfill' ) ;
 var combinations = require('@aureooms/js-itertools/src/map/combinations.js').combinations;
@@ -38,11 +39,21 @@ var RESULTS_TEMPLATE = `
   <div class="results-div-row">
     %s
   </div>
+  <div class="results-div-row">
+    %s
+  </div>
 </div>
 `;
 
 var RESULTS_ELEMENT = '<span>%s</span>';
 var RESULTS_ELEMENT_BOLD = '<span class="bold">%s</span>';
+
+var RESULTS_LINK_TEMPLATE = `
+<a href="/solution/%s/%s" target="_blank">
+  View details
+  <i class="material-icons">open_in_new</i>
+</a>
+`;
 
 function load_csv(text) {
   var output = {};
@@ -100,7 +111,8 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
-    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
+    var solution_link = '<span></span>';
+    var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else if (count > 1) {
     var title = sprintf(RESULTS_ELEMENT_BOLD, 'Too many results found');
@@ -108,7 +120,8 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
-    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
+    var solution_link = '<span></span>';
+    var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else {
     var element = results[0];
@@ -122,7 +135,13 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, element[key][1]);
     }).join('\n');
-    var output = sprintf(RESULTS_TEMPLATE, title, summary, headers, values);
+    var key = Object.values(element).map((v) => {
+      return v[0];
+    }).filter((v) => {
+      return v !== null;
+    }).join("_");
+    var solution_link = sprintf(RESULTS_LINK_TEMPLATE, data.hash, key);
+    var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   }
 }
@@ -162,6 +181,24 @@ function generate_display(data, filename, heatmaps) {
   });
 }
 
+function load_solution_details(text) {
+  data.hash = md5sum(text);
+  var url = sprintf('/solution/%s', data.hash);
+  fetch(url)
+  .then(
+    response => {
+      if (response.status === 200) {
+        data.solutions = true;
+        console.log('Found solutions file for ' + data.hash);
+      } else if (response.status === 404) {
+        data.solutions = false;
+        console.log('No solutions file for ' + data.hash);
+      } else {
+        console.error('Invalid response code (' + response.status + ') from ' + url);
+      }
+    });
+}
+
 var data;
 var heatmaps;
 
@@ -169,6 +206,7 @@ $(document).ready(() => {
   new FileUploader('file-dropper', 'file-chooser', (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
+    load_solution_details(text);
     console.log(data);
     heatmaps = generate_heat_maps(data);
     generate_display(data, filename, heatmaps);
