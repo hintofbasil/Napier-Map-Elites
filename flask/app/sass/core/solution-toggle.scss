@@ -5,3 +5,9 @@ div[data-enabled="1"]:after {
 div[data-enabled="0"]:after {
   content: url('/static/images/invisible.svg');
 }
+
+#map-toggles-container div {
+  display: inline-block;
+  padding: 5px 20px 5px 20px;
+  cursor: pointer;
+}
