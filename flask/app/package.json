@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "Boilerplate code for a flask app using docker containers",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "material-design-icons": "^3.0.1",
+    "url-loader": "^1.0.1"
+  },
   "devDependencies": {
     "css-loader": "^0.28.11",
     "mini-css-extract-plugin": "^0.4.0",

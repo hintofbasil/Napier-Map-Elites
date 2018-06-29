@@ -36,6 +36,15 @@ module.exports = {
         'css-loader',
         'sass-loader'
       ]
+    },
+    {
+      test: /\.(eot|woff|ttf|woff2)$/,
+      use: [{
+        loader: 'url-loader',
+        options: {
+          name: '[name].[ext]'
+        }
+      }]
     }]
   },
   plugins: [
