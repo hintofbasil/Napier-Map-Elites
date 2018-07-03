@@ -55,6 +55,10 @@ var RESULTS_LINK_TEMPLATE = `
 </a>
 `;
 
+var RESULT_SOLUTIONS_MISSING_TEMPLATE = `
+Solutions file missing.  Please upload.
+`;
+
 function load_csv(text) {
   var output = {};
   text = text.split('\n').map((x) => x.split(','));
@@ -111,7 +115,9 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
-    var solution_link = '<span></span>';
+    var solution_link = data.solutions ?
+      '<span></span>' :
+      sprintf(RESULT_SOLUTIONS_MISSING_TEMPLATE);
     var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else if (count > 1) {
@@ -120,7 +126,9 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
-    var solution_link = '<span></span>';
+    var solution_link = data.solutions ?
+      '<span></span>' :
+      sprintf(RESULT_SOLUTIONS_MISSING_TEMPLATE);
     var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else {
@@ -140,7 +148,9 @@ function update_results(results) {
     }).filter((v) => {
       return v !== null;
     }).join("_");
-    var solution_link = sprintf(RESULTS_LINK_TEMPLATE, data.hash, key);
+    var solution_link = data.solutions ?
+      sprintf(RESULTS_LINK_TEMPLATE, data.hash, key) :
+      sprintf(RESULT_SOLUTIONS_MISSING_TEMPLATE);
     var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   }
@@ -192,6 +202,7 @@ function load_solution_details(text) {
         console.log('Found solutions file for ' + data.hash);
       } else if (response.status === 404) {
         data.solutions = false;
+        add_solution_uploader();
         console.log('No solutions file for ' + data.hash);
       } else {
         console.error('Invalid response code (' + response.status + ') from ' + url);
@@ -199,11 +210,14 @@ function load_solution_details(text) {
     });
 }
 
+function add_solution_uploader() {
+}
+
 var data;
 var heatmaps;
 
 $(document).ready(() => {
-  new FileUploader('file-dropper', 'file-chooser', (text, filename) => {
+  new FileUploader('local', 'csv-upload-container', (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     load_solution_details(text);
