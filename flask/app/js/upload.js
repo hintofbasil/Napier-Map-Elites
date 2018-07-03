@@ -202,7 +202,7 @@ function load_solution_details(text) {
         console.log('Found solutions file for ' + data.hash);
       } else if (response.status === 404) {
         data.solutions = false;
-        add_solution_uploader();
+        add_solution_uploader(data.hash);
         console.log('No solutions file for ' + data.hash);
       } else {
         console.error('Invalid response code (' + response.status + ') from ' + url);
@@ -210,8 +210,13 @@ function load_solution_details(text) {
     });
 }
 
-function add_solution_uploader() {
-  new FileUploader('form', 'solutions-upload-container', (text, filename) => {
+function add_solution_uploader(filehash) {
+  new FileUploader('form',
+    {
+      containerId: 'solutions-upload-container',
+      url: '/solutions/upload',
+      filename: filehash + '.zip',
+    }, (text, filename) => {
     console.log(text, filename);
   });
 }
@@ -220,8 +225,10 @@ var data;
 var heatmaps;
 
 $(document).ready(() => {
-  add_solution_uploader();
-  new FileUploader('local', 'csv-upload-container', (text, filename) => {
+  new FileUploader('local',
+    {
+      containerId: 'csv-upload-container'
+    }, (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
     load_solution_details(text);

@@ -96,6 +96,6 @@ def upload_solution():
     f = request.files.get('file', None)
     if not f:
         return "Missing argument 'file'", 400
-    outPath = os.path.join(app.config['SOLUTION_UPLOAD_FOLDER'], filename + '.zip')
+    outPath = os.path.join(app.config['SOLUTION_UPLOAD_FOLDER'], filename)
     f.save(outPath)
     return "OK"

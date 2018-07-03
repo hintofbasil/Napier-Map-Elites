@@ -14,11 +14,19 @@ var DEFAULT_TEMPLATE = `
   </div>
 `;
 
+var DEFAULT_OPTIONS = {
+  containerId: null,
+  url: "/",
+  filename: null,
+
+}
+
 class FileUploader {
-  constructor(type, containerId, onRead) {
+  constructor(type, options, onRead) {
     this.type = type;
     this.uniqueId = uniqueString();
-    this.container = document.getElementById(containerId);
+    this.options = {...DEFAULT_OPTIONS, ...options};
+    this.container = document.getElementById(this.options.containerId);
     this.onRead = onRead;
     this.init();
   }
@@ -100,14 +108,12 @@ class FileUploader {
 
   initFormPost() {
     var doUpload = (file) => {
-      let url = '/solutions/upload';
       let formData = new FormData();
-      let filename = '00000.zip'
 
       formData.append('file', file);
-      formData.append('filename', filename);
+      formData.append('filename', this.options.filename);
 
-      fetch(url, {
+      fetch(this.options.url, {
         method: 'POST',
         body: formData
       })
