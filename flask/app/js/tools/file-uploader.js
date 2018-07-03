@@ -10,6 +10,8 @@ var DEFAULT_TEMPLATE = `
         <div class="file-dropper-text">Select a file or drag here</div>
         <span class="file-button">Select a file</span>
       </div>
+      <progress id="file-progress-{uniqueId}" max=100 value=0 style="display:none;"></progress>
+      <div id="file-error-message-{uniqueId}"></div>
     </label>
   </div>
 `;
@@ -39,11 +41,15 @@ class FileUploader {
     });
     this.dropper = document.getElementById('file-dropper-' + this.uniqueId);
     this.chooser = document.getElementById('file-chooser-' + this.uniqueId);
+    this.progress = document.getElementById('file-progress-' + this.uniqueId);
+    this.errorMessage = document.getElementById('file-error-message-' + this.uniqueId);
   }
 
   readTemplate() {
     this.dropper = document.getElementById('file-dropper-' + this.uniqueId);
     this.chooser = document.getElementById('file-chooser-' + this.uniqueId);
+    this.progress = document.getElementById('file-progress-' + this.uniqueId);
+    this.errorMessage = document.getElementById('file-error-message-' + this.uniqueId);
   }
 
   init() {
@@ -110,26 +116,38 @@ class FileUploader {
 
   initFormPost() {
     var doUpload = (file) => {
+      this.progress.style.display = '';
+      this.progress.classList.remove('error');
+      this.errorMessage.innerHTML = '';
+
+      let xhr = new XMLHttpRequest();
       let formData = new FormData();
+
+      xhr.upload.addEventListener('progress', e => {
+        this.progress.value = (e.loaded * 100.0 / e.total) || 100;
+      });
+
+      xhr.addEventListener('readystatechange', e => {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            if (this.onSuccess) {
+              this.onSuccess()
+            }
+          } else {
+            this.progress.classList.add('error');
+            this.errorMessage.innerHTML = xhr.responseText;
+            if (this.onError) {
+              this.onError(xhr.status, xhr.responseText);
+            }
+          }
+        }
+      });
 
       formData.append('file', file);
       formData.append('filename', this.options.filename);
 
-      fetch(this.options.url, {
-        method: 'POST',
-        body: formData
-      })
-      .then(e => {
-        if (e.status >= 200 && e.status < 300) {
-          if (this.onSuccess) {
-            this.onSuccess()
-          }
-        } else {
-          if (this.onError) {
-            e.text().then(text => this.onError(e.status, text));
-          }
-        }
-      });
+      xhr.open('POST', this.options.url, true);
+      xhr.send(formData);
     };
 
     var fileDragDrop = (e) => {
