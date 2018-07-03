@@ -11,7 +11,7 @@ var DEFAULT_TEMPLATE = `
         <span class="file-button">Select a file</span>
       </div>
       <progress id="file-progress-{uniqueId}" max=100 value=0 style="display:none;"></progress>
-      <div id="file-error-message-{uniqueId}"></div>
+      <div class="error" id="file-error-message-{uniqueId}"></div>
     </label>
   </div>
 `;
