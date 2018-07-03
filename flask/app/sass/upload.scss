@@ -2,6 +2,10 @@
 @import 'tools/heatmap';
 @import 'tools/parallel-coordinates';
 
+#details i {
+  cursor: pointer;
+}
+
 #solutions-upload-container {
 
   .label-wrapper-inner {
@@ -15,7 +19,7 @@
 
 }
 
-.solutions-upload-header {
+#solutions-upload-header {
   font-weight: bold;
   font-size: 1.6em;
   text-align: center;

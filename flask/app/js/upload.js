@@ -14,6 +14,7 @@ var DETAILS_TEMPLATE = `
   <div class="details-filename">%s</div>
   <div class="reset-container">
     <div class="whole column" id="heatmaps-dropdown-container">
+      <i id="solution-upload-toggle" class="material-icons">cloud_upload</i>
       <div id="heatmaps-dropdown-container" class="dropdown-container">
         <select id="heatmaps-dropdown">
           <option value="average">Average</option>
@@ -189,6 +190,9 @@ function generate_display(data, filename, heatmaps) {
       heatmap.change_colouring_method(e.target.value);
     }
   });
+  document.getElementById('solution-upload-toggle').addEventListener('click', e => {
+    toggle_solution_uploader();
+  });
 }
 
 function load_solution_details(text) {
@@ -210,7 +214,22 @@ function load_solution_details(text) {
     });
 }
 
+function toggle_solution_uploader() {
+  if (document.getElementById('solutions-upload-header').innerHTML !== '') {
+    remove_solution_uploader();
+  } else {
+    add_solution_uploader(data.hash);
+  }
+}
+
+function remove_solution_uploader() {
+  ['solutions-upload-header', 'solutions-upload-container'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+}
+
 function add_solution_uploader(filehash) {
+  document.getElementById('solutions-upload-header').innerHTML = 'Add solutions file';
   new FileUploader('form',
     {
       containerId: 'solutions-upload-container',
@@ -218,7 +237,7 @@ function add_solution_uploader(filehash) {
       filename: filehash + '.zip',
       allowedFiles: '.zip',
     }, (text, filename) => {
-      document.getElementById('solutions-upload-container').innerHTML = "";
+      remove_solution_uploader()
       document.getElementsByClassName('solutions-missing-results-text')[0].innerHTML = "";
       data.solutions = true;
   });
