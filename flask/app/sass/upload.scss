@@ -2,6 +2,25 @@
 @import 'tools/heatmap';
 @import 'tools/parallel-coordinates';
 
+#solutions-upload-container {
+
+  .label-wrapper-inner {
+    padding: 0;
+
+    * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+}
+
+.solutions-upload-header {
+  font-weight: bold;
+  font-size: 1.6em;
+  text-align: center;
+}
+
 h3 {
   font-size: 1em;
 }
