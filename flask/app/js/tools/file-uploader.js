@@ -102,8 +102,10 @@ class FileUploader {
     var doUpload = (file) => {
       let url = '/solutions/upload';
       let formData = new FormData();
+      let filename = '00000.zip'
 
       formData.append('file', file);
+      formData.append('filename', filename);
 
       fetch(url, {
         method: 'POST',
@@ -111,6 +113,7 @@ class FileUploader {
       })
       .then(e => {
         console.log("SUCCESS", e);
+        e.text().then(f => { console.log(f); });
       })
       .catch(e => {
         console.log("ERR", e);

@@ -1,9 +1,12 @@
 import os
+import re
+import string
 from zipfile import ZipFile
 
-from flask import abort, jsonify, render_template, Response
+from flask import abort, jsonify, render_template, Response, request
 from flask_api import status
 import markdown
+from werkzeug.utils import secure_filename
 
 from main import app
 
@@ -84,4 +87,15 @@ def get_solution_kml(solution_hash, solution_key, file_name):
 
 @app.route('/solutions/upload', methods=['POST'])
 def upload_solution():
+    filename = request.data.get('filename', None)
+    if not filename:
+        return 'Missing argument \'filename\'', 400
+    filename = secure_filename(filename)
+    if not re.match('[a-f\d]+\.zip', filename):
+        return 'Invalid filename.  Valid names are [0-9,a-f].zip', 400
+    f = request.files.get('file', None)
+    if not f:
+        return "Missing argument 'file'", 400
+    outPath = os.path.join(app.config['SOLUTION_UPLOAD_FOLDER'], filename + '.zip')
+    f.save(outPath)
     return "OK"
