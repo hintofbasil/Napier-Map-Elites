@@ -22,12 +22,13 @@ var DEFAULT_OPTIONS = {
 }
 
 class FileUploader {
-  constructor(type, options, onRead) {
+  constructor(type, options, onSuccess, onError) {
     this.type = type;
     this.uniqueId = uniqueString();
     this.options = {...DEFAULT_OPTIONS, ...options};
     this.container = document.getElementById(this.options.containerId);
-    this.onRead = onRead;
+    this.onSuccess = onSuccess;
+    this.onError = onError;
     this.init();
   }
 
@@ -82,7 +83,7 @@ class FileUploader {
       var reader = new FileReader();
       reader.onload = () => {
         this.file_chosen();
-        this.onRead(reader.result, reader.fileName);
+        this.onSuccess(reader.result, reader.fileName);
       };
       reader.fileName = e.dataTransfer.files[0].name;
       reader.readAsText(e.dataTransfer.files[0]);
@@ -95,7 +96,7 @@ class FileUploader {
       var reader = new FileReader();
       reader.onload = (file) => {
         this.file_chosen();
-        this.onRead(reader.result, reader.fileName);
+        this.onSuccess(reader.result, reader.fileName);
       };
       reader.fileName = e.target.files[0].name;
       reader.readAsText(e.target.files[0]);
@@ -118,11 +119,15 @@ class FileUploader {
         body: formData
       })
       .then(e => {
-        console.log("SUCCESS", e);
-        e.text().then(f => { console.log(f); });
-      })
-      .catch(e => {
-        console.log("ERR", e);
+        if (e.status >= 200 && e.status < 300) {
+          if (this.onSuccess) {
+            this.onSuccess()
+          }
+        } else {
+          if (this.onError) {
+            e.text().then(text => this.onError(e.status, text));
+          }
+        }
       });
     };
 
