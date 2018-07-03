@@ -81,3 +81,7 @@ def get_solution_kml(solution_hash, solution_key, file_name):
                     mimetype='text/xml'
                 )
         abort(404)
+
+@app.route('/solutions/upload', methods=['POST'])
+def upload_solution():
+    return "OK"

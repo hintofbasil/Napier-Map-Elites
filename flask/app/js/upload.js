@@ -211,12 +211,16 @@ function load_solution_details(text) {
 }
 
 function add_solution_uploader() {
+  new FileUploader('form', 'solutions-upload-container', (text, filename) => {
+    console.log(text, filename);
+  });
 }
 
 var data;
 var heatmaps;
 
 $(document).ready(() => {
+  add_solution_uploader();
   new FileUploader('local', 'csv-upload-container', (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');

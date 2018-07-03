@@ -44,14 +44,7 @@ class FileUploader {
       this.readTemplate();
     }
 
-    if (this.type === 'local') {
-      this.initLocal();
-    } else {
-      throw 'Unknown FileUploader type: ' + this.type;
-    }
-  }
-
-  initLocal() {
+    // Enable hover highlighting
     var fileDragHover = (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -61,10 +54,23 @@ class FileUploader {
         this.dropper.classList.remove('file-chooser-hover')
       }
     };
+    this.dropper.addEventListener('dragover', fileDragHover, false);
+    this.dropper.addEventListener('dragleave', fileDragHover, false);
 
+    if (this.type === 'local') {
+      this.initLocal();
+    } else if (this.type === 'form') {
+      this.initFormPost();
+    } else {
+      throw 'Unknown FileUploader type: ' + this.type;
+    }
+  }
+
+  initLocal() {
     var fileDragDrop = (e) => {
       e.stopPropagation();
       e.preventDefault();
+
       var reader = new FileReader();
       reader.onload = () => {
         this.file_chosen();
@@ -75,6 +81,9 @@ class FileUploader {
     };
 
     var fileChooserChange = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
       var reader = new FileReader();
       reader.onload = (file) => {
         this.file_chosen();
@@ -84,8 +93,46 @@ class FileUploader {
       reader.readAsText(e.target.files[0]);
     };
 
-    this.dropper.addEventListener('dragover', fileDragHover, false);
-    this.dropper.addEventListener('dragleave', fileDragHover, false);
+    this.dropper.addEventListener('drop', fileDragDrop, false);
+
+    this.chooser.addEventListener('change', fileChooserChange, false);
+  }
+
+  initFormPost() {
+    var doUpload = (file) => {
+      let url = '/solutions/upload';
+      let formData = new FormData();
+
+      formData.append('file', file);
+
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(e => {
+        console.log("SUCCESS", e);
+      })
+      .catch(e => {
+        console.log("ERR", e);
+      });
+    };
+
+    var fileDragDrop = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var files = e.dataTransfer.files;
+      doUpload(files[0]);
+    };
+
+    var fileChooserChange = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var files = e.target.files;
+      doUpload(files[0]);
+    };
+
     this.dropper.addEventListener('drop', fileDragDrop, false);
 
     this.chooser.addEventListener('change', fileChooserChange, false);
