@@ -91,7 +91,7 @@ def upload_solution():
     if not filename:
         return 'Missing argument \'filename\'', 400
     filename = secure_filename(filename)
-    if not re.match('[a-f\d]+\.zip', filename):
+    if not re.match('^[a-f\d]+\.zip$', filename):
         return 'Invalid filename.  Valid names are [0-9,a-f].zip', 400
     f = request.files.get('file', None)
     if not f:
