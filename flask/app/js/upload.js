@@ -56,7 +56,7 @@ var RESULTS_LINK_TEMPLATE = `
 `;
 
 var RESULT_SOLUTIONS_MISSING_TEMPLATE = `
-Solutions file missing.  Please upload.
+<span class="solutions-missing-results-text">Solutions file missing.  Please upload.</span>
 `;
 
 function load_csv(text) {
@@ -218,7 +218,9 @@ function add_solution_uploader(filehash) {
       filename: filehash + '.zip',
       allowedFiles: '.zip',
     }, (text, filename) => {
-    console.log(text, filename);
+      document.getElementById('solutions-upload-container').innerHTML = "";
+      document.getElementsByClassName('solutions-missing-results-text')[0].innerHTML = "";
+      data.solutions = true;
   });
 }
 
