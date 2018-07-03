@@ -127,9 +127,9 @@ function update_results(results) {
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
     }).join('\n');
-    var solution_link = data.solutions ?
-      '<span></span>' :
-      sprintf(RESULT_SOLUTIONS_MISSING_TEMPLATE);
+    var solution_link = data.solutions === false ?
+      sprintf(RESULT_SOLUTIONS_MISSING_TEMPLATE) :
+      '<span></span>';
     var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else {
@@ -206,6 +206,7 @@ function load_solution_details(text) {
         console.log('Found solutions file for ' + data.hash);
       } else if (response.status === 404) {
         data.solutions = false;
+        update_results([1,1]);
         add_solution_uploader(data.hash);
         console.log('No solutions file for ' + data.hash);
       } else {
