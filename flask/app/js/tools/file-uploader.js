@@ -2,7 +2,7 @@ const format = require("string-template")
 const uniqueString = require('unique-string');
 
 var DEFAULT_TEMPLATE = `
-  <input type="file" class="file-chooser" id="file-chooser-{uniqueId}" />
+  <input type="file" class="file-chooser" id="file-chooser-{uniqueId}" accept="{allowedFiles}" />
   <div class="label-wrapper">
     <label class="file-dropper" for="file-chooser-{uniqueId}" id="file-dropper-{uniqueId}">
       <div class="label-wrapper-inner">
@@ -18,7 +18,7 @@ var DEFAULT_OPTIONS = {
   containerId: null,
   url: "/",
   filename: null,
-
+  allowedFiles: "*",
 }
 
 class FileUploader {
@@ -35,6 +35,7 @@ class FileUploader {
   addTemplate() {
     this.container.innerHTML = format(DEFAULT_TEMPLATE, {
       uniqueId: this.uniqueId,
+      allowedFiles: this.options.allowedFiles,
     });
     this.dropper = document.getElementById('file-dropper-' + this.uniqueId);
     this.chooser = document.getElementById('file-chooser-' + this.uniqueId);

@@ -216,6 +216,7 @@ function add_solution_uploader(filehash) {
       containerId: 'solutions-upload-container',
       url: '/solutions/upload',
       filename: filehash + '.zip',
+      allowedFiles: '.zip',
     }, (text, filename) => {
     console.log(text, filename);
   });
@@ -227,7 +228,8 @@ var heatmaps;
 $(document).ready(() => {
   new FileUploader('local',
     {
-      containerId: 'csv-upload-container'
+      containerId: 'csv-upload-container',
+      allowedFiles: '.csv',
     }, (text, filename) => {
     data = load_csv(text);
     var sliderContainer = $('#slider-container');
