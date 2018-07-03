@@ -13,6 +13,46 @@
 
   transition: border 0.8s;
 
+  progress {
+    width: 60%;
+    margin: 0 20% 0 20%;
+    height: 2em;
+    border-radius: 10px;
+  }
+
+  progress.error {
+    color: red;
+  }
+
+  progress::-moz-progress-bar {
+    border-radius: 10px;
+  }
+
+  progress::-moz-progress-value {
+    border-radius: 10px;
+  }
+
+  progress::-webkit-progress-bar {
+    border-radius: 10px;
+    background-color: #eee;
+  }
+
+  progress::-webkit-progress-value {
+    border-radius: 10px;
+    background-color: lightblue;
+  }
+
+  progress.error::-webkit-progress-value {
+    background: red;
+    border: 1px dashed lightcoral;
+  }
+
+  progress.error::-moz-progress-bar {
+    background: red;
+    border-radius: 10px;
+    border: 1px dashed lightcoral;
+  }
+
   .label-wrapper-inner {
     padding: 5em 2em 5em 2em;
   }
