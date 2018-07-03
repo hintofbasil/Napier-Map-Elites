@@ -229,7 +229,7 @@ function remove_solution_uploader() {
 }
 
 function add_solution_uploader(filehash) {
-  document.getElementById('solutions-upload-header').innerHTML = 'Add solutions file';
+  document.getElementById('solutions-upload-header').innerHTML = data.solutions ? 'Update solutions file' : 'Add solutions file';
   new FileUploader('form',
     {
       containerId: 'solutions-upload-container',
