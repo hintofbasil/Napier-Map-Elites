@@ -13,6 +13,30 @@ db = SQLAlchemy(app)
 from views.api import *
 from views.templates import *
 
+@app.after_request
+def add_security_headers(response):
+    headers = {
+        'strict-transport-security': [
+            'max-age=31536000',
+            'includeSubDomains'
+        ],
+        'content-security-policy': [
+            'default-src \'self\'',
+            'font-src \'self\' data: http://fonts.googleapis.com/*',
+            'style-src \'self\' \'unsafe-inline\'',
+        ],
+        'x-frame-options': ['SAMEORIGIN'],
+        'x-xss-protection': [
+            '1',
+            'mode=block'
+        ],
+        'x-content-type-options': ['nosniff'],
+        'referrer-policy': ['same-origin'],
+    }
+    for (key, content) in headers.items():
+        response.headers[key] = ';'.join(content)
+    return response
+
 @app.cli.command()
 def initdb():
     db.create_all()
