@@ -1,0 +1,64 @@
+\section{Installation}
+
+\subsection{Pre-requisites}
+
+This project is designed to be hosted using Docker\footnote{https://www.docker.com/} and docker-compose\footnote{https://docs.docker.com/compose/}.  While the project is based on Flask and can be hosted using a standard web setup (e.g Nginx with uWSGI) this is not recommended.
+
+Docker can be installed easily using the script at https://get.docker.com/ (although from a security point this is not recommended) or from your package manager.  Windows users should be able to find an installer on the docker website.  Docker-compose is a python package available through pip\footnote{https://packaging.python.org/tutorials/installing-packages/} or your package manager.
+
+\subsection{Downloading files}
+
+All the files required to host the website are available on github at https://github.com/hintofbasil/Napier-Map-Elites.  It is unlikely that pull requests will be accepted into this repository and so you should forking would be a good idea.
+
+\subsection{Installing testing environment}
+
+To install the testing environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group however the docker group is equivalent to root access with no password requirement and should not be used.
+
+\begin{minted}{bash}
+	docker-compose build
+	docker-compose up -d
+\end{minted}
+
+\subsection{Updating the test environment}
+
+To update the test environment run the following commands while in the repository.  Some of these commands require root.  N.B only one environment can be running at a time.
+
+\begin{minted}{bash}
+	git pull origin master
+	docker-compose build
+	docker-compose down
+	docker-compose up -d
+\end{minted}
+
+\subsection{Installing the production environment}
+
+Set the following environment variables.  You may want to put these into your .bashrc file so you don't have to set them each time.
+
+\begin{minted}{bash}
+	export SSL_LOCATION="Location to host ssl certificates.  Should be an empty folder."
+	export SOLUTIONS_FOLDER="Location to save solutions zip files to."
+\end{minted}
+
+Create the folders.
+
+\begin{minted}{bash}
+	mkdir -p $SSL_LOCATION $SOLUTIONS_FOLDER
+\end{minted}
+
+Launch the server
+
+\begin{minted}{bash}
+	docker-compose -f docker-compose.production.yml build
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
+
+\subsection{Updating the production environment}
+
+To update the production environment run the following commands while in the repository.  Some of these commands require root.  N.B only one environment can be running at a time.
+
+\begin{minted}{bash}
+	git pull origin master
+	docker-compose -f docker-compose.production.yml build
+	docker-compose down
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
