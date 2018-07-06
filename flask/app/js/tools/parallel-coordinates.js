@@ -5,7 +5,7 @@ class ParallelCoordinates {
   constructor(elementId, refreshId, data, onFiltered) {
 
     var scale = d3.scaleLinear()
-        .domain([data.distanceRange[1], data.distanceRange[0]])
+        .domain([data.distanceRange[0], data.distanceRange[1]])
         .range([0,1]);
 
     var color = d => {
