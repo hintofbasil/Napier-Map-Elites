@@ -234,8 +234,7 @@ function add_solution_uploader(filehash) {
   new FileUploader('form',
     {
       containerId: 'solutions-upload-container',
-      url: '/solutions/upload',
-      filename: filehash + '.zip',
+      url: '/solutions/upload/' + filehash + '.zip',
       allowedFiles: '.zip',
     }, (text, filename) => {
       remove_solution_uploader()
