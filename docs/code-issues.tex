@@ -1,0 +1,25 @@
+\section{Code issues and considerations}
+
+\subsection{Flask Docker Boilerplate}
+
+This project is based on a template Flask Docker Boilerplate\footnote{https://github.com/hintofbasil/Flask-Docker-Boilerplate} which is actively maintained by myself.  This will likely continue to be updated with bug fixes and new features.  Pulling the master branch of this in to the project intermittently could be wise.  These changes are not guaranteed to be non-breaking and so testing should be done before pushing these changes up to production.
+
+\subsection{Parcoords-es}
+
+The parallel coordinates code is forked from https://github.com/BigFatDog/parcoords-es.  This has been updated to include a single point brush.  The fork is available at https://github.com/hintofbasil/parcoords-es.  This code has not been submitted as a pull request due to slight issues in the quality of the code.
+
+This code will likely not be maintained and so a fork should be created.  This should try and pull in changes from the original repository which is still actively maintained.
+
+This library is not included in the webpack build script due to incompatibilities.  Currently the file 'dist/parcoords.standalone.js' must be copied to 'flask/app/static/js/parcoords.js' whenever the library is updated.  To include the sourcemaps copy the file 'dist/parcoords.standalone.js.map' to 'flask/app/static/js/parcoords.js.map'.
+
+\subsubsection{Changes}
+
+The core changes to the app are all contained in the 'src/brush/points/' folder.  Some changes were also made to index.js but only to enable the new points brush.
+
+\subsection{Napier Map Elites}
+
+The code for the website is contained in the flask/app folder.  The following is a breakdown of the folder structure.
+
+\paragraph{images}  The location to save images.  During development these must also be copied to static/images however this is not required in production builds.  This will likely be fixed in a future update of Flask Docker Boilerplate.
+
+
