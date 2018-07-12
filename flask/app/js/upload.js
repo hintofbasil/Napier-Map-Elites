@@ -236,6 +236,27 @@ function add_solution_uploader(filehash) {
       containerId: 'solutions-upload-container',
       url: '/solutions/upload/' + filehash + '.zip',
       allowedFiles: '.zip',
+      presend: () => {
+        return new Promise((resolve, reject) => {
+          let xhr = new XMLHttpRequest();
+
+          xhr.onload = () => resolve(xhr.responseText);
+          xhr.onerror = () => reject(xhr.responseText);
+
+          xhr.addEventListener('readystatechange', e => {
+            if (xhr.readyState === 4) {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.responseText);
+              } else {
+                reject([xhr.status, xhr.response]);
+              }
+            }
+          });
+
+          xhr.open('POST', '/solutions/lock/' + filehash + '.zip');
+          xhr.send();
+        });
+      },
     }, (text, filename) => {
       remove_solution_uploader()
       document.getElementsByClassName('solutions-missing-results-text')[0].innerHTML = "";
