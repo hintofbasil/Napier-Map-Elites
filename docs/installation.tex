@@ -10,7 +10,27 @@ Docker can be installed easily using the script at https://get.docker.com/ (alth
 
 All the files required to host the website are available on github at https://github.com/hintofbasil/Napier-Map-Elites.  It is unlikely that pull requests will be accepted into this repository and so you should forking would be a good idea.
 
-\subsection{Installing testing environment}
+\subsection{Different environments}
+
+There are three environments built into the application.  Testing, Development and Production.  The core settings of each environment can be seen in flask/app/config.py
+
+\subsubsection{Development}
+
+This is the environment designed for developing new features.  This does not require Docker and runs locally on a laptop only.  It enables watch features to update the application code when changes are made.
+
+Further details of how to set this up can be found in flask/app/README.md.
+
+This will likely be updated in the future through Flask Docker Boilerplate (see \ref{sec:flask-docker-boilerplate}) to use Docker to help mitigate NPM issues (e.g https://blog.npmjs.org/post/175824896885/incident-report-npm-inc-operations-incident-of).
+
+\subsubsection{Testing}
+
+This is the environment designed for simple testing.  It is designed to be very simple to launch, requiring no configuration, and to be secure enough to expose to the internet.  This environment is hosted using Docker.  It does not enable persistence of uploaded solution files.  It does not require or allow secure connections (https).
+
+\subsubsection{Production}
+
+This is the recommended environment for hosting the website on an internet facing web server.  It enables solution persistence (although it is wiped at 00:00 daily).  It also enables the use of secure connections (https).  This does require some configuration, detailed below, and is only recommended for advanced users.
+
+\subsection{Installing the testing environment}
 
 To install the testing environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group however the docker group is equivalent to root access with no password requirement and should not be used.
 
