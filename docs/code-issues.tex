@@ -20,6 +20,20 @@ The core changes to the app are all contained in the 'src/brush/points/' folder.
 
 The code for the website is contained in the flask/app folder.  The following is a breakdown of the folder structure.
 
+\paragraph{main.py}  The main entrypoint for the code.
+
+\paragraph{config.py}  The configuration file for the project.  This contains three configurations which are loaded based on what \$APP\_SETTINGS is set to.  This is loaded in main.py.  If a key error is found when loading the application this is the likely location and the likely cause is an unset environment variable.
+
 \paragraph{images}  The location to save images.  During development these must also be copied to static/images however this is not required in production builds.  This will likely be fixed in a future update of Flask Docker Boilerplate.
 
+\paragraph{js}  The location to store Javascript.  Files in this directory are compiled into files in the static/js folder.  Files in subfolders are not compiled but can be included in other Javascript files.
 
+\paragraph{sass}  The location to store sass/scss files.  Files in this directory are compiled into files in the static/css folder.  Files in subfolders are not compiled but can be included in other sass/scss files.
+
+\paragraph{solutions}  The default folder to save solutions into in testing and development builds.
+
+\paragraph{static}  The folder compiled static files are saved in to.  This is in the .gitignore however some files have been force added as they don't compile nicely with existing Javascript files.  The build process will likely be updated in the future to allow these to be required in other Javascript files.
+
+\paragraph{templates}  The folder for html templates to be saved in to.  These are rendered by Flask using Jinja2 \footnote{http://jinja.pocoo.org/}.
+
+\paragraph{views}  The folder for python code to create endpoints to be saved into.  If new files are created they must be added into main.py.
