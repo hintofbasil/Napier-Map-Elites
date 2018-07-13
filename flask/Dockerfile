@@ -27,6 +27,9 @@ RUN mkdir -p /var/map-elites/solutions && chmod a+rw /var/map-elites/solutions
 # Add lockfile deleting cron job running every minute
 # deleting locks older than 15 minutes
 ENV MAX_LOCK_AGE 900
-RUN (crontab -u $(whoami) -l; echo "* * * * * python /app/clear_locks.py --age $MAX_LOCK_AGE") \
+RUN (crontab -u $(whoami) -l; \
+	echo "* * * * * python /app/clear_locks.py --age $MAX_LOCK_AGE") \
 	| crontab -u $(whoami) -
 
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
