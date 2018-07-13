@@ -1,0 +1,4 @@
+app/node_modules
+app/static
+app/__pycache__
+app/env
