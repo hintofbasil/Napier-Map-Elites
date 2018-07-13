@@ -1,0 +1,60 @@
+\section{File Formats}
+
+\subsection{Results CSV}
+
+The results CSV file is the first file uploaded on to the website.  This file requires a specific format for the application to be able to read it.  A sample is shown below.
+
+\begin{figure}[h]
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		Dimensions & 2 & & & & \\
+		\hline
+		Normalised & 20 & & & & \\
+		\hline
+		evals & 100 & & & & \\
+		\hline
+		key & dist & emissions & fixedCost & actualEmissions & actualFixedCost \\
+		\hline
+		14:8 & 142.5 & 14 & 8 & 152.95 & 1700 \\
+		\hline
+		2:5 & 134.9 & 2 & 5 & 122.78 & 1550 \\
+		\hline
+		20:18 & 178.5 & 20 & 18 & 171.14 & 2100 \\
+		$⋮$ & $⋮$ & $⋮$ & $⋮$ & $⋮$ & $⋮$ \\
+	\end{tabular}
+	\caption{A sample CSV with two dimensions}
+	\label{table:sample-csv-two-dimension}
+\end{figure}
+
+\paragraph{Dimensions}  This is the number of variables in your results, excluding 'dist' which is mandatory.  In the above example there are two dimensions - emissions and fixedCost.
+
+\paragraph{Normalised}  This value is kept for historical reasons.  It is no longer used and can be set to any integer number.
+
+\paragraph{evals}  This is the number of evaluations contained in your results.  This must be set equal to the number of lines in your csv, excluding the top four lines.
+
+\paragraph{Headers}  The fourth line in the CSV is the headers for the data.  'key' and 'dist' are required headers.  These two columns must be followed by a set of normalised columns equal to the value of dimensions - in the example above these are 'emissions' and 'fixedCost'.  These columns must be followed by the actual values of these normalised headers - in the above example 'actualEmissions' and 'actualFixedCost'.
+
+The names of the 'key' and 'dist' columns are fixed.  The names of the other columns are not fixed.
+
+\paragraph{Values}  The first value is the result key.  This is the normalised values joined with a semi-colon between each.  In the example above the normalised values in the columns are 14 and 8, so the key is 14:8.  If these was a third dimension the key may look like 14:8:20.
+
+The second value is the solution distance.
+
+The following values are the normalised data points followed by the actual data points.
+
+\subsection{Solutions zip file}
+
+The solutions zip file should contain a single folder for each of the results in the associated zip file.  These folder should be named the same as the key column, however the colons should be replaced with underscores.
+
+Three folders from the sample above (Figure \ref{table:sample-csv-two-dimension}) can be seen below.
+
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{images/solution-zip-folders.png}
+	\label{img:solution-zip-folders}
+\end{figure}
+
+Each of these folders contains details about the solution.
+
+Each folder must contain a single Markdown\footnote{http://commonmark.org/help/} file.  The name of this file is not fixed but must end with '.md'  This file should contain a Markdown formatted description of the solution.
+
+Each folder may contain any number of Keyhole Markup Language\footnote{https://developers.google.com/kml/} (kml) files.  The names of these files are not fixed but must end with '.kml'.
