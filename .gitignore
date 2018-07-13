@@ -366,4 +366,4 @@ TSWLatexianTemp*
 
 # standalone packages
 *.sta
-docs/root.pdf
+docs/**/*.pdf
