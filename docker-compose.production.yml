@@ -24,9 +24,11 @@ services:
       DB_PASSWORD: ${FLASK_DB_PASSWORD}
       SECRET_KEY: ${FLASK_SECRET_KEY}
       DB_DATABASE: ${FLASK_DB_DATABASE}
+      SOLUTIONS_FOLDER: ${SOLUTIONS_FOLDER}
     depends_on:
       - db
     volumes:
       - /var/log/nginx:/var/log/nginx
       - /var/log/uwsgi:/var/log/uwsgi
       - ${SSL_LOCATION}:/ssl:ro
+      - ${SOLUTIONS_FOLDER}:/var/map-elites/solutions

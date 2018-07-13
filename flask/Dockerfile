@@ -15,6 +15,8 @@ RUN pip install -r /app/requirements.txt
 # Install npm and run gulp build
 RUN cd /app && npm install && npm run prod && cp /app/images /app/static -r
 
-#Enable logging
+# Enable logging
 RUN printf "\nlogto = /var/log/uwsgi/uwsgi.log" >> /etc/uwsgi/uwsgi.ini && mkdir -p /var/log/uwsgi
 
+# Create solutions folder
+RUN mkdir -p /var/map-elites/solutions && chmod a+rw /var/map-elites/solutions
