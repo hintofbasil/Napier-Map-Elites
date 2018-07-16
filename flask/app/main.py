@@ -24,7 +24,12 @@ def add_security_headers(response):
             'default-src \'self\'',
             'font-src \'self\' data: http://fonts.googleapis.com/*',
             'style-src \'self\' \'unsafe-inline\'',
-            'script-src \'self\' https://code.jquery.com/jquery-3.3.1.min.js'
+            'script-src \'self\' https://code.jquery.com/jquery-3.3.1.min.js',
+            'img-src \'self\' '
+                + 'data: '
+                + 'http://a.tile.openstreetmap.org '
+                + 'http://b.tile.openstreetmap.org '
+                + 'http://c.tile.openstreetmap.org',
         ],
         'x-frame-options': ['SAMEORIGIN'],
         'x-xss-protection': [
