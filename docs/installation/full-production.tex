@@ -15,14 +15,20 @@ Create the folders.
 	mkdir -p $SSL_LOCATION $SOLUTIONS_FOLDER
 \end{minted}
 
+Generate the SSL certificates.  The generated certificates only last 90 days and must be renewed before that (see \ref{section:certificate-renewal}).  Email reminders will be sent to the registered email address.
+
+\begin{minted}{bash}
+	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
+	*** Follow prompts selecting 'spin up a tempory web server' when asked ***
+	cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
+\end{minted}
+
 Launch the server
 
 \begin{minted}{bash}
 	docker-compose -f docker-compose.production.yml build
 	docker-compose -f docker-compose.production.yml up -d
 \end{minted}
-
-TODO add SSL certificate generation.
 
 \subsection{Updating the production environment}
 
@@ -32,5 +38,15 @@ To update the production environment run the following commands while in the roo
 	git pull origin master
 	docker-compose -f docker-compose.production.yml build
 	docker-compose down
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
+
+\subsubsection{Renewing certificates} \label{section:certificate-renewal}
+
+\begin{minted}{bash}
+	docker-compose down
+	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
+	*** Follow prompts ***
+	cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
 	docker-compose -f docker-compose.production.yml up -d
 \end{minted}
