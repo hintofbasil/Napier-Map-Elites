@@ -45,7 +45,7 @@ To update the production environment run the following commands while in the roo
 
 \begin{minted}{bash}
 	docker-compose down
-	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
+	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
 	*** Follow prompts ***
 	cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
 	docker-compose -f docker-compose.production.yml up -d
