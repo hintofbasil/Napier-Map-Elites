@@ -1,0 +1,21 @@
+\section{Simple Production}
+
+\subsection{Installation}
+
+To install the simple production environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group.
+
+\begin{minted}{bash}
+	docker-compose build
+	docker-compose up -d
+\end{minted}
+
+\subsection{Updating}
+
+To update the test environment run the following commands while in the repository.  Some of these commands require root.
+
+\begin{minted}{bash}
+	git pull origin master
+	docker-compose build
+	docker-compose down
+	docker-compose up -d
+\end{minted}

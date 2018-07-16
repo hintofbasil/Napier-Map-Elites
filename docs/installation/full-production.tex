@@ -1,0 +1,36 @@
+\section{Full Production}
+
+\subsection{Installation}
+
+Set the following environment variables.  You may want to put these into your .bashrc file so you don't have to set them each time.  Both paths should be absolute paths.
+
+\begin{minted}{bash}
+	export SSL_LOCATION="Location to host ssl certificates."
+	export SOLUTIONS_FOLDER="Location to save solutions zip files to."
+\end{minted}
+
+Create the folders.
+
+\begin{minted}{bash}
+	mkdir -p $SSL_LOCATION $SOLUTIONS_FOLDER
+\end{minted}
+
+Launch the server
+
+\begin{minted}{bash}
+	docker-compose -f docker-compose.production.yml build
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
+
+TODO add SSL certificate generation.
+
+\subsection{Updating the production environment}
+
+To update the production environment run the following commands while in the root directory of the repository.  Some of these commands require root.
+
+\begin{minted}{bash}
+	git pull origin master
+	docker-compose -f docker-compose.production.yml build
+	docker-compose down
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
