@@ -37,3 +37,27 @@ The code for the website is contained in the flask/app folder.  The following is
 \paragraph{templates}  The folder for html templates to be saved in to.  These are rendered by Flask using Jinja2 \footnote{http://jinja.pocoo.org/}.
 
 \paragraph{views}  The folder for python code to create endpoints to be saved into.  If new files are created they must be added into main.py.
+
+\subsection{Max file size}
+
+The maximum file size is configured in various different places.  To change this is must be updated in all these places.
+
+\paragraph{flask/app/config.py}  The setting is called MAX\_CONTENT\_LENGTH.  This is set in bytes.
+
+The following files all contain a settings called \textbf{client\_max\_body\_size}.  This must be set to the same value in all places.
+
+\begin{itemize}
+	\item flask/etc-http/nginx/nginx.conf
+	\item flask/etc-http/nginx/conf.d/http.conf
+	\item flask/etc-production/nginx/nginx.conf
+	\item flask/etc-production/nginx/http.conf
+	\item flask/etc-production/nginx/https.conf
+\end{itemize}
+
+After these changes have been made the docker container must be restarted using the following commands from the root of the project.
+
+\begin{minted}{bash}
+	docker-compose -f docker-compose.production.yml build
+	docker-compose down
+	docker-compose -f docker-compose.production.yml up -d
+\end{minted}
