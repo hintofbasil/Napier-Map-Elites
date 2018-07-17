@@ -1,0 +1,21 @@
+.launch-container {
+  padding-top: 5%;
+  text-align: center;
+}
+
+.launch-button {
+  padding: 20% 15% 20% 15%;
+  font-size: 1.4em;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+
+  background: #add8e6;
+  color: #fcfcfc;
+  border: none;
+
+  &:hover {
+    background: #45859a;
+    color: #fcfcfc;
+  }
+}
