@@ -12,6 +12,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = ''
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SOLUTION_UPLOAD_FOLDER = os.path.join(get_base_folder(), 'solutions')
+    MAX_CONTENT_LENGTH = 2 * 1024 * 1024 * 1024 # 2GB
 
 class Testing(Config):
     CSRF_ENABLED = False
