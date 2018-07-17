@@ -1,0 +1,64 @@
+.launch-container {
+  padding-top: 5%;
+  text-align: center;
+  padding-bottom: 10%;
+}
+
+.launch-button {
+  padding: 20% 15% 20% 15%;
+  font-size: 1.4em;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+
+  background: #337ab7;
+  color: #fcfcfc;
+  border: none;
+
+  &:hover {
+    background: #1266ab;
+    color: #fcfcfc;
+  }
+}
+
+.documentation-link-container {
+  text-align: center;
+
+  a {
+    width: 90%;
+
+    font-size: 1.4em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+
+    padding-top: 5%;
+    padding-bottom: 5%;
+
+    background: #add8e6;
+    color: #fcfcfc;
+    border: none;
+
+    &:hover {
+      background: #45859a;
+      color: #fcfcfc;
+    }
+  }
+
+  .user-documentation-button {
+    background: #5cb85c;
+    margin-bottom: 5%;
+    &:hover {
+      background: #369836;
+    }
+  }
+
+  .local-installation-documentation-button {
+    background: #f0ad4e;
+    margin-bottom: 5%;
+    &:hover {
+      background: #de9226;
+    }
+  }
+}
