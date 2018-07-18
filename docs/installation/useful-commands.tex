@@ -28,3 +28,7 @@ This command assumes the environment variables have been correctly set.
 \begin{minted}{bash}
 	docker exec -it napiermapelites_flask_1 /app/clear_locks.py --ignore-locks --delete-solutions
 \end{minted}
+
+\subsection{Migrating data}
+
+To migrate data from one server to another install the application as normal.  Then copy the \$SOLUTIONS\_FOLDER to the new server and set the \$SOLUTIONS\_FOLDER variable on the new server.
