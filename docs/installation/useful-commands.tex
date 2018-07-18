@@ -1,0 +1,30 @@
+\section{Useful commands}
+
+\subsection{Manually adding a solutions zip file}
+
+To manually add a solutions file to the server you simply need to copy it to \mintinline{bash}{$SOLUTIONS_FOLDER}.  An example is shown below where it is assumed \mintinline{bash}{$SOLUTIONS_FOLDER} has been set to the same value as the remote server and \mintinline{bash}{$SOLUTIONS_FILE}, \mintinline{bash}{$CSV_FILE} and \mintinline{bash}{$REMOTE_USERNAME} have been set.
+
+\begin{minted}{bash}
+mv "$SOLUTIONS_FILE" "$(md5sum $CSV_FILE | cut -d ' ' -f 1).zip"
+scp "$SOLUTIONS_FILES" "$REMOTE_USERNAME@commute.napier.ac.uk:$SOLUTIONS_FOLDER"
+\end{minted}
+
+\subsection{Manually clearing locks}
+
+Lock files are created when solution files are uploaded.  These locks are deleted on a successful upload but may not be deleted on a failed upload.  They are automatically cleared 15 minutes after they are created but occasionally it is useful to clear the locks manually.  The following command does this.
+
+This command assumes the environment variables have been correctly set.
+
+\begin{minted}{bash}
+	docker exec -it napiermapelites_flask_1 /app/clear_locks.py
+\end{minted}
+
+\subsection{Clearing server data}
+
+While the server automatically deletes all uploaded solutions at midnight GMT it can be useful to manually clear the server.  The following command achieves this.
+
+This command assumes the environment variables have been correctly set.
+
+\begin{minted}{bash}
+	docker exec -it napiermapelites_flask_1 /app/clear_locks.py --ignore-locks --delete-solutions
+\end{minted}

@@ -28,12 +28,3 @@ The server SSL certificates are generated using LetsEncrypt\footnote{https://let
 	cp /etc/letsencrypt/live/commute.napier.ac.uk/* $SSL_LOCATION
 	docker-compose -f /home/40180582/Napier-Map-Elites/docker-compose.production.yml up -d
 \end{minted}
-
-\subsection{Manually adding a solutions zip file}
-
-To manually add a solutions file to the server you simply need to copy it to \mintinline{bash}{$SOLUTIONS_FOLDER}.  An example is shown below where it is assumed \mintinline{bash}{$SOLUTIONS_FOLDER} has been set to the same value as the remote server and \mintinline{bash}{$SOLUTIONS_FILE}, \mintinline{bash}{$CSV_FILE} and \mintinline{bash}{$REMOTE_USERNAME} have been set.
-
-\begin{minted}{bash}
-	mv "$SOLUTIONS_FILE" "$(md5sum $CSV_FILE | cut -d ' ' -f 1).zip"
-	scp "$SOLUTIONS_FILES" "$REMOTE_USERNAME@commute.napier.ac.uk:$SOLUTIONS_FOLDER"
-\end{minted}
