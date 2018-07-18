@@ -124,6 +124,9 @@ function load_csv(text) {
       if (!normalised) {
         throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid float', line_no, i + 3);
       }
+      if (!(normalised === parseInt(key.split(':')[i]))) {
+        throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Key does not match normalised value', line_no, i + 3);
+      }
       var actual = parseFloat(line[i + dataOffset]);
       if (!actual) {
         throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid float', line_no, i + dataOffset + 1);
