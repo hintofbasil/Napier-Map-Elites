@@ -1,0 +1,31 @@
+\section{Documentation}
+
+The documentation for this project is contained in the docs folder and uses LaTeX.  As such it must be compiled before being shared.
+
+\subsection{Dependencies}
+
+Minted, the LaTeX package used for code highlighting, requires Pygments\footnote{http://pygments.org/}.  These two dependencies can be installed on Debian based systems with the following command.  Other operating systems may vary.
+
+\begin{minted}{bash}
+	sudo apt-get install texlive-latex-extra python-pygments
+\end{minted}
+
+\subsection{Compiling}
+
+Due to the use of Minted the shell-escape flag must be used to compile these documents.  The following command should be able to compile them.  Most LaTeX editors have the ability to enable shell-escape in their settings.
+
+\begin{minted}{bash}
+	pdflatex -shell-escape -synctex=1 -interaction=nonstopmode DOCUMENT.tex
+\end{minted}
+
+\subsection{Updating on the web server}
+
+This documentation is not automatically compiled with the building of the project.  The compiled documents are simply copied across into the static folder before compiling.  The compiled versions should be included in the Git repository.
+
+\begin{minted}{bash}
+	cp docs/developer/developer.pdf flask/app/static/docs/developer_manual.pdf
+	
+	cp docs/installation/installation.pdf flask/app/static/docs/installation_manual.pdf
+	
+	cp docs/user_manual/user_manual.pdf flask/app/static/docs/user_manual.pdf
+\end{minted}
