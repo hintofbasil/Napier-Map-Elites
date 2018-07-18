@@ -60,33 +60,77 @@ var RESULT_SOLUTIONS_MISSING_TEMPLATE = `
 <span class="solutions-missing-results-text">Solutions file missing.  Please upload.</span>
 `;
 
+var CSV_PARSE_ERROR_MESSAGE_CELL_NO = "Unable to parse CSV file.  %s on line %d cell %d";
+var CSV_PARSE_ERROR_MESSAGE = "Unable to parse CSV file.  %s on line %d";
+
 function load_csv(text) {
+  // Loads the CSV file.
+  // Throws line number on error.
   var output = {};
   text = text.split('\n').map((x) => x.split(','));
-  output['dimensions'] = parseInt(text[0][1]);
-  output['normalised'] = parseInt(text[1][1]);
-  output['evals'] = parseInt(text[2][1]);
+  ['dimensions', 'normalised', 'evals'].forEach((key, i) => {
+    if(!(text[i][0].toLowerCase() === key)) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid key', i + 1, 1);
+    }
+    try {
+      var value = parseInt(text[0][1]);
+    } catch (err) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid number', i + 1, 2);
+    }
+    if (!value) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid number', i + 1, 2);
+    }
+    output[key] = value;
+  });
+  let required_keys = text[3].slice(0, 2);
+  if (!(required_keys[0].toLowerCase() === 'key')) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid header, should be "key"', 4, 1);
+  }
+  if (!(required_keys[1].toLowerCase() === 'dist')) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid header, should be "dist"', 4, 1);
+  }
   output['keys'] = text[3].slice(2, 2 + output['dimensions']);
+  let all_headers = text[3].slice(2, 2 + (output['dimensions'] * 2));
+  if (all_headers.length != output['dimensions'] * 2) {
+    throw sprintf(CSV_PARSE_ERROR_MESSAGE, 'Incorrect number of headers, should be ' + output['dimensions'] * 2 + ' -', 4);
+  }
   // Min and max normalised values
   output['ranges'] = Array.from(output['keys']).map(() => [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]);
 
   output['data'] = {}
   var dataOffset = 2 + output['keys'].length;
   var distanceRange = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY];
-  for (var line of text.slice(4)) {
-    // Skip any invalid lines
-    if (line.length <= 1) {
-      console.log('Skipping line: "' + line + '"');
-      continue;
+  let lines = text.slice(4).filter(line => {
+    return line != "";
+  });
+  if (lines.length === 0) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE, 'CSV contains no data', 5);
+  }
+  lines.forEach((line, line_no) => {
+    // Started reading from line 5;
+    line_no = line_no + 5;
+    let key = line[0];
+    if (key.split(':').length !== output['dimensions']) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Incorrect key length', line_no, 1);
+    }
+    if (!parseFloat(line[1])) {
+      throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid float', line_no, 2);
     }
     var node = {
       'distance': [null, parseFloat(line[1])],
     }
     output['keys'].forEach((e, i) => {
       var normalised = parseFloat(line[i + 2]);
+      if (!normalised) {
+        throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid float', line_no, i + 3);
+      }
+      var actual = parseFloat(line[i + dataOffset]);
+      if (!actual) {
+        throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid float', line_no, i + dataOffset + 1);
+      }
       node[e] = [
         normalised,
-        parseFloat(line[i + dataOffset])
+        actual
       ];
       // Set min and max ranges
       if (normalised < output['ranges'][i][0]) {
@@ -98,7 +142,7 @@ function load_csv(text) {
     distanceRange[0] = Math.min(distanceRange[0], node['distance'][1]);
     distanceRange[1] = Math.max(distanceRange[1], node['distance'][1]);
     output['data'][line[0]] = node;
-  }
+  });
   output['distanceRange'] = distanceRange;
   return output;
 };
