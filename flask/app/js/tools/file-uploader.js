@@ -21,6 +21,7 @@ var DEFAULT_OPTIONS = {
   url: "/",
   filename: null,
   allowedFiles: "*",
+  presend: null,
 }
 
 class FileUploader {
@@ -145,6 +146,7 @@ class FileUploader {
 
       formData.append('file', file);
       formData.append('filename', this.options.filename);
+      formData.append('key', this.key);
 
       xhr.open('POST', this.options.url, true);
       xhr.send(formData);
@@ -163,7 +165,21 @@ class FileUploader {
       e.preventDefault();
 
       var files = e.target.files;
-      doUpload(files[0]);
+      if (this.options.presend != null) {
+        this.options.presend().then(key => {
+          this.key = key;
+          doUpload(files[0]);
+        }).catch(err => {
+          this.progress.classList.add('error');
+          this.errorMessage.innerHTML = err[1];
+          if (this.onError) {
+            this.onError(err[0], err[1]);
+          }
+        });
+      } else {
+        doUpload(files[0]);
+      }
+
     };
 
     this.dropper.addEventListener('drop', fileDragDrop, false);
