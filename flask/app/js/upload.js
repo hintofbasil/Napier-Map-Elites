@@ -60,8 +60,18 @@ var RESULT_SOLUTIONS_MISSING_TEMPLATE = `
 <span class="solutions-missing-results-text">Solutions file missing.  Please upload.</span>
 `;
 
-var CSV_PARSE_ERROR_MESSAGE_CELL_NO = "Unable to parse CSV file.  %s on line %d cell %d";
-var CSV_PARSE_ERROR_MESSAGE = "Unable to parse CSV file.  %s on line %d";
+var CSV_PARSE_ERROR_MESSAGE_CELL_NO = `
+Unable to parse CSV file.  %s on line %d cell %d.
+<br />
+Please see
+<a href="/static/docs/user_manual.pdf" target="_blank">the docs</a> for more details.
+`;
+var CSV_PARSE_ERROR_MESSAGE = `
+Unable to parse CSV file.  %s on line %d
+<br />
+Please see
+<a href="/static/docs/user_manual.pdf" target="_blank">the docs</a> for more details.
+`;
 
 function load_csv(text) {
   // Loads the CSV file.
