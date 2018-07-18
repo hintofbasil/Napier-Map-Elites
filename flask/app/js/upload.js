@@ -122,7 +122,7 @@ function update_results(results) {
     var output = sprintf(RESULTS_TEMPLATE, title, solution_link, summary, headers, values);
     container.append(output);
   } else if (count > 1) {
-    var title = sprintf(RESULTS_ELEMENT_BOLD, 'Too many results found');
+    var title = sprintf(RESULTS_ELEMENT_BOLD, '&nbsp;');
     var summary = sprintf(RESULTS_ELEMENT, '');
     var values = data.keys.map((key) => {
       return sprintf(RESULTS_ELEMENT, '-');
