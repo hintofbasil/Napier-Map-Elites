@@ -319,16 +319,24 @@ $(document).ready(() => {
     {
       containerId: 'csv-upload-container',
       allowedFiles: '.csv',
-    }, (text, filename) => {
-    data = load_csv(text);
-    var sliderContainer = $('#slider-container');
-    load_solution_details(text);
-    console.log(data);
-    heatmaps = generate_heat_maps(data);
-    generate_display(data, filename, heatmaps);
-    var parallelCoordinates = new ParallelCoordinates('#parcoords', 'pc-refresh', data, on_result_found);
-    // Create results table.  Any input with length > 1 results in too many
-    // results message
-    update_results([1,1]);
+    }, (uploader, text, filename) => {
+      let csv_error_container = document.getElementById('csv-upload-error');
+      csv_error_container.innerHTML = "";
+      try {
+        data = load_csv(text);
+        uploader.file_chosen();
+      } catch (err) {
+        csv_error_container.innerHTML = err;
+        return;
+      }
+      var sliderContainer = $('#slider-container');
+      load_solution_details(text);
+      console.log(data);
+      heatmaps = generate_heat_maps(data);
+      generate_display(data, filename, heatmaps);
+      var parallelCoordinates = new ParallelCoordinates('#parcoords', 'pc-refresh', data, on_result_found);
+      // Create results table.  Any input with length > 1 results in too many
+      // results message
+      update_results([1,1]);
   });
 });
