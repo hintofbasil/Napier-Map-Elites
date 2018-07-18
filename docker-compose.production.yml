@@ -1,16 +1,5 @@
 version: '2'
 services:
-  db:
-    build:
-      context: ./mysql
-    environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      FLASK_DB_DATABASE: ${FLASK_DB_DATABASE}
-      FLASK_DB_PASSWORD: ${FLASK_DB_PASSWORD}
-    volumes:
-      - /var/log/mysql:/var/log/mysql
-      - /var/lib/mysql:/var/lib/mysql
-
   flask:
     build:
       context: ./flask
@@ -21,12 +10,8 @@ services:
       - "443:443"
     environment:
       APP_SETTINGS: 'Docker'
-      DB_PASSWORD: ${FLASK_DB_PASSWORD}
       SECRET_KEY: ${FLASK_SECRET_KEY}
-      DB_DATABASE: ${FLASK_DB_DATABASE}
       SOLUTIONS_FOLDER: ${SOLUTIONS_FOLDER}
-    depends_on:
-      - db
     volumes:
       - /var/log/nginx:/var/log/nginx
       - /var/log/uwsgi:/var/log/uwsgi

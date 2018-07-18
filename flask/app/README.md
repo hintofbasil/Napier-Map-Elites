@@ -9,14 +9,8 @@
 ### Environment variables
 
     export APP_SETTINGS=Testing
-    export DB_PASSWORD="change_me"
-    export DB_DATABASE=""
     export SECRET_KEY="change_me"
     export FLASK_APP=$(pwd)/main.py
-
-### Initialise database
-
-    flask initdb
 
 ### Run tests
 
@@ -31,8 +25,6 @@
 ### Environment variables
 
     export APP_SETTINGS=Development
-    export DB_PASSWORD="change_me"
-    export DB_DATABASE=""
     export SECRET_KEY="change_me"
     export FLASK_APP=$(pwd)/main.py
     export FLASK_DEBUG=1
@@ -46,10 +38,6 @@ The development static files can be generated using
 or can be generated with watch enabled using
 
     npm run watch
-
-### Initialise database
-
-    flask initdb
 
 ### Development server
 
