@@ -2,7 +2,68 @@
 
 \textbf{Both production environments are build for Unix systems only.  This means they will not work on Windows.}
 
-\subsection{Installation}
+\subsection{Certificate Generation}
+
+Generate the SSL certificates.  The generated certificates only last 90 days and must be renewed before that (see \ref{section:certificate-renewal}).  Email reminders will be sent to the registered email address.
+
+\begin{minted}{bash}
+docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
+*** Follow prompts selecting 'spin up a tempory web server' when asked ***
+cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
+\end{minted}
+
+\subsection{Systemd}
+
+Using systemd is the preferred method for launching the project as it allows for simple implementation of environment variables and allows for simple restarts.
+
+\subsubsection{Installation}
+
+First all the files in the systemd directory must be renamed to replace 'APP\_NAME' with the name of your application.
+
+\begin{minted}{bash}
+export APP_NAME=YOUR_APP_NAME
+cd systemd
+rename APP_NAME $APP_NAME $(ls)
+cd ..
+\end{minted}
+
+The environment variables should then be set in \mintinline{bash}{systemd/$APP_NAME.production.service.d/local.conf}.  Any paths must be absolute paths.
+
+These files must then be copied over to the systemd folder.
+
+\begin{minted}{bash}
+cp -r systemd/* /etc/systemd/system/
+\end{minted}
+
+Finally systemd needs to be reloaded.
+
+\begin{minted}{bash}
+systemctl daemon-reload
+\end{minted}
+
+\subsubsection{Launching}
+
+To install the simple production environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group.
+
+\begin{minted}{bash}
+systemctl start $APP_NAME.production.service
+\end{minted}
+
+\subsubsection{Updating}
+
+To update the test environment run the following commands while in the repository.  Some of these commands require root.
+
+\begin{minted}{bash}
+git pull origin master
+docker-compose build
+systemctl restart $APP_NAME.production.service
+\end{minted}
+
+\subsection{Manual}
+
+Manual installation should typically only be used if systemd is not installed on the system or the above method failed for some reason.
+
+\subsubsection{Installation}
 
 Set the following environment variables.  You may want to put these into your .bashrc file so you don't have to set them each time.  Both paths should be absolute paths.
 
@@ -11,28 +72,14 @@ Set the following environment variables.  You may want to put these into your .b
 	export SOLUTIONS_FOLDER="Location to save solutions zip files to."
 \end{minted}
 
-Create the folders.
-
-\begin{minted}{bash}
-	mkdir -p $SSL_LOCATION $SOLUTIONS_FOLDER
-\end{minted}
-
-Generate the SSL certificates.  The generated certificates only last 90 days and must be renewed before that (see \ref{section:certificate-renewal}).  Email reminders will be sent to the registered email address.
-
-\begin{minted}{bash}
-	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
-	*** Follow prompts selecting 'spin up a tempory web server' when asked ***
-	cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
-\end{minted}
-
-Launch the server
+\subsubsection{Launching}
 
 \begin{minted}{bash}
 	docker-compose -f docker-compose.production.yml build
 	docker-compose -f docker-compose.production.yml up -d
 \end{minted}
 
-\subsection{Updating the production environment}
+\subsubsection{Updating the production environment}
 
 To update the production environment run the following commands while in the root directory of the repository.  Some of these commands require root.
 
@@ -43,7 +90,7 @@ To update the production environment run the following commands while in the roo
 	docker-compose -f docker-compose.production.yml up -d
 \end{minted}
 
-\subsubsection{Renewing certificates} \label{section:certificate-renewal}
+\subsection{Renewing certificates} \label{section:certificate-renewal}
 
 \begin{minted}{bash}
 	docker-compose down
