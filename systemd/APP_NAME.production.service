@@ -1,0 +1,12 @@
+[Unit]
+Description=Napier Map Elites analysis tool with HTTPS enabled
+After=docker.service
+
+[Service]
+ExecStart=docker-compose -f $DOCKER_COMPOSE_FILE up
+ExecStop=docker-compose -f $DOCKER_COMPOSE_FILE down
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
