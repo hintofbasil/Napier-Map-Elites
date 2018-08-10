@@ -2,7 +2,58 @@
 
 \textbf{Both production environments are build for Unix systems only.  This means they will not work on Windows.}
 
-\subsection{Installation}
+\subsection{Systemd}
+
+Using systemd is the preferred method for launching the project as it allows for simple implementation of environment variables and allows for simple restarts.
+
+\subsubsection{Installation}
+
+First all the files in the systemd directory must be renamed to replace 'APP\_NAME' with the name of your application.
+
+\begin{minted}{bash}
+export APP_NAME=YOUR_APP_NAME
+cd systemd
+rename APP_NAME $APP_NAME $(ls)
+cd ..
+\end{minted}
+
+The environment variables should then be set in \mintinline{bash}{systemd/$APP_NAME.service.d/local.conf}.  Any paths must be absolute paths.
+
+These files must then be copied over to the systemd folder.
+
+\begin{minted}{bash}
+cp -r systemd/* /etc/systemd/system/
+\end{minted}
+
+Finally systemd needs to be reloaded.
+
+\begin{minted}{bash}
+systemctl daemon-reload
+\end{minted}
+
+\subsubsection{Launching}
+
+To install the simple production environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group.
+
+\begin{minted}{bash}
+systemctl start $APP_NAME.service
+\end{minted}
+
+\subsubsection{Updating}
+
+To update the test environment run the following commands while in the repository.  Some of these commands require root.
+
+\begin{minted}{bash}
+git pull origin master
+docker-compose build
+systemctl restart $APP_NAME.service
+\end{minted}
+
+\subsection{Manual}
+
+Manual installation should typically only be used if systemd is not installed on the system or the above method failed for some reason.
+
+\subsubsection{Launching}
 
 To install the simple production environment the following commands should be run in the root folder of the repository.  These commands require root or being a member of the 'docker' group.
 
@@ -11,7 +62,7 @@ To install the simple production environment the following commands should be ru
 	docker-compose up -d
 \end{minted}
 
-\subsection{Updating}
+\subsubsection{Updating}
 
 To update the test environment run the following commands while in the repository.  Some of these commands require root.
 
