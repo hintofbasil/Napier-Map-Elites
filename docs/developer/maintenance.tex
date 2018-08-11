@@ -5,17 +5,28 @@ These commands use absolute paths which exist on commute.napier.ac.uk. The paths
 \subsection{Switching from testing to production}
 
 \begin{minted}{bash}
-	docker-compose down
-	docker-compose -f /home/40180582/Napier-Map-Elites/docker-compose.production.yml build
-	docker-compose -f /home/40180582/Napier-Map-Elites/docker-compose.production.yml up -d
+	systemctl stop NME.service
+	// Maybe need to rebuild
+	systemctl start NME.production.service
 \end{minted}
 
 \subsection{Switching from production to testing}
 
 \begin{minted}{bash}
-	docker-compose down
-	docker-compose build
-	docker-compose up -d
+	systemctl stop NME.production.service
+	systemctl start NME.service
+\end{minted}
+
+\subsection{Enabling launch on boot}
+
+\begin{minted}{bash}
+	systemctl enable NME(.production).service
+\end{minted}
+
+\subsection{Disabling launch on boot}
+
+\begin{minted}{bash}
+	systemctl disable NME(.production).service
 \end{minted}
 
 \subsection{Updating SSL certificates}
@@ -23,8 +34,8 @@ These commands use absolute paths which exist on commute.napier.ac.uk. The paths
 The server SSL certificates are generated using LetsEncrypt\footnote{https://letsencrypt.org/}. To update them run the following commands.
 
 \begin{minted}{bash}
-	docker-compose down
+	systemctl stop NME.production.service
 	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
 	cp /etc/letsencrypt/live/commute.napier.ac.uk/* $SSL_LOCATION
-	docker-compose -f /home/40180582/Napier-Map-Elites/docker-compose.production.yml up -d
+	systemctl start NME.production.service
 \end{minted}
