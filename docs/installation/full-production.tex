@@ -7,7 +7,7 @@
 Generate the SSL certificates.  The generated certificates only last 90 days and must be renewed before that (see \ref{section:certificate-renewal}).  Email reminders will be sent to the registered email address.
 
 \begin{minted}{bash}
-docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
+docker run --rm -it -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly
 *** Follow prompts selecting 'spin up a tempory web server' when asked ***
 cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
 \end{minted}
@@ -59,6 +59,15 @@ docker-compose build
 systemctl restart $APP_NAME.production.service
 \end{minted}
 
+\subsection{Renewing certificates} \label{section:certificate-renewal}
+
+\begin{minted}{bash}
+systemctl stop $APP_NAME.production.service
+docker run --rm -it -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
+cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
+systemctl start $APP_NAME.production.service
+\end{minted}
+
 \subsection{Manual}
 
 Manual installation should typically only be used if systemd is not installed on the system or the above method failed for some reason.
@@ -94,8 +103,7 @@ To update the production environment run the following commands while in the roo
 
 \begin{minted}{bash}
 	docker-compose down
-	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
-	*** Follow prompts ***
+	docker run --rm -it -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
 	cp /etc/letsencrypt/live/DOMAIN_NAME/* $SSL_LOCATION
 	docker-compose -f docker-compose.production.yml up -d
 \end{minted}

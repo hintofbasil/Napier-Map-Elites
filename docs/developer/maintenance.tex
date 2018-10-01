@@ -35,7 +35,7 @@ The server SSL certificates are generated using LetsEncrypt\footnote{https://let
 
 \begin{minted}{bash}
 	systemctl stop NME.production.service
-	docker run --rm -it -p 80:80 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
+	docker run --rm -it -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
 	cp /etc/letsencrypt/live/commute.napier.ac.uk/* $SSL_LOCATION
 	systemctl start NME.production.service
 \end{minted}
