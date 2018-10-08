@@ -83,7 +83,7 @@ function load_csv(text) {
       throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid key', i + 1, 1);
     }
     try {
-      var value = parseInt(text[0][1]);
+      var value = parseInt(text[i][1]);
     } catch (err) {
       throw sprintf(CSV_PARSE_ERROR_MESSAGE_CELL_NO, 'Invalid number', i + 1, 2);
     }
@@ -219,7 +219,7 @@ function generate_heat_maps(data) {
   var pairs = combinations(data.keys, 2);
   var maps = [];
   for (var pair of pairs) {
-    var map = new Heatmap('heatmaps', data, pair, 'average', (e, info) => {
+    var map = new Heatmap('heatmaps', data, pair, 'average', data.normalised, (e, info) => {
       console.log(info);
     });
     maps.push(map);

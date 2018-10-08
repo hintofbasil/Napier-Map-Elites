@@ -1,5 +1,5 @@
 class Heatmap {
-  constructor(elementId, data, myKeys, colouring_method, callback) {
+  constructor(elementId, data, myKeys, colouring_method, normalised, callback) {
     this.colouring_method = colouring_method;
     this.container = document.getElementById(elementId);
     this.toHighlight = [0, 0];
@@ -8,6 +8,7 @@ class Heatmap {
     this.myKeys = myKeys;
     this.range = data.distanceRange;
     this.callback = callback;
+    this.normalised = normalised;
     this.create_map();
     this.add_label();
   }
@@ -83,13 +84,22 @@ class Heatmap {
 
   get_map_dimensions() {
     if (!this.dimentions) {
-      var keyIds = this.get_key_ids();
-      this.dimensions = [
-        this.data.ranges[keyIds[0]][0],
-        this.data.ranges[keyIds[1]][0],
-        this.data.ranges[keyIds[0]][1],
-        this.data.ranges[keyIds[1]][1],
-      ];
+      if (this.normalised) {
+        this.dimensions = [
+          0,
+          0,
+          this.normalised,
+          this.normalised,
+        ];
+      } else {
+        var keyIds = this.get_key_ids();
+        this.dimensions = [
+          this.data.ranges[keyIds[0]][0],
+          this.data.ranges[keyIds[1]][0],
+          this.data.ranges[keyIds[0]][1],
+          this.data.ranges[keyIds[1]][1],
+        ];
+      }
     }
     return this.dimensions;
   }
@@ -110,9 +120,9 @@ class Heatmap {
       }
     }
     for (var element of elements) {
-      var lowerX = this.data.ranges[this.data.keys.indexOf(this.myKeys[0])][0];
-      var lowerY = this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][0];
-      var upperY = this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][1];
+      var lowerX = this.normalised ? 0 : this.data.ranges[this.data.keys.indexOf(this.myKeys[0])][0];
+      var lowerY = this.normalised ? 0 : this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][0];
+      var upperY = this.normalised ? this.normalised : this.data.ranges[this.data.keys.indexOf(this.myKeys[1])][1];
       var x = element[this.myKeys[0]][0] - lowerX;
       var y = (upperY - lowerY) - (element[this.myKeys[1]][0] - lowerY);
       table.children[y].children[x]['data-in-selection'] = true;
